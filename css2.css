@@ -9,7 +9,7 @@ fieldset #fields div {
     text-align: left
 }
 
-fieldset #fields:last-child {
+fieldset #fields div:last-child {
     display: block;
     text-align: center;
 }
