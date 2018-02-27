@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', main);
 
 function main() {
 
-    var form = document.getElementById('regform');
+    var form = document.getElementById('loginform');
     if (form) {
         var email = emailInput();
         var span = spanMessage();
@@ -11,14 +11,14 @@ function main() {
             event.preventDefault();
             if (email.getValue() != "") {
                 if (isEmailValid(email.getValue())) {
-                    message = 'Email is valid!';
+                    message = 'Email is valid !';
                     email.setCorrect();
                 } else {
                     message = 'Email is not valid, try again !';
                     email.setError();
                 }
             } else {
-                message = 'at least give me an email :(';
+                message = 'Please insert your email !';
                 email.setError();
             }
             span.setMessage(message);
