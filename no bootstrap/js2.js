@@ -4,6 +4,10 @@ function main() {
     var form = document.getElementById('regform');
     if (form) {
         var email = document.getElementById('email');
+        email.addEventListener('keydown', function() {
+            email.classList.remove('error');
+            email.classList.remove('correct');
+        })
         var span = document.getElementById('msg');
         form.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -14,9 +18,6 @@ function main() {
                 } else {
                     span.innerHTML = 'Email is not valid, try again !';
                     email.classList.add('error');
-                    email.addEventListener('keydown', function() {
-                        email.classList.remove('error');
-                    })
                 }
             } else {
                 span.innerHTML = 'at least give me an email :(';

@@ -59,7 +59,7 @@ p {
 }
 
 .correct {
-    background: #FFCDD2 url(correct.png) no-repeat 98% center;
+    background: url(correct.png) no-repeat 98%;
     box-shadow: 0 0 5px rgb(97, 255, 82);
     border-color: rgb(50, 255, 23);
 }
