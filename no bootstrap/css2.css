@@ -51,3 +51,15 @@ legend {
 p {
     font-size: 200%;
 }
+
+.error {
+    background: #FFCDD2 url(error.png) no-repeat 98% center;
+    box-shadow: 0 0 5px #FF5252;
+    border-color: #FF1744;
+}
+
+.correct {
+    background: #FFCDD2 url(correct.png) no-repeat 98% center;
+    box-shadow: 0 0 5px rgb(97, 255, 82);
+    border-color: rgb(50, 255, 23);
+}

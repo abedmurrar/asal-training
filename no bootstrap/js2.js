@@ -10,11 +10,17 @@ function main() {
             if (email.value != "") {
                 if (isEmailValid(email.value)) {
                     span.innerHTML = 'Email is valid!';
+                    email.classList.add('correct');
                 } else {
                     span.innerHTML = 'Email is not valid, try again !';
+                    email.classList.add('error');
+                    email.addEventListener('keydown', function() {
+                        email.classList.remove('error');
+                    })
                 }
             } else {
                 span.innerHTML = 'at least give me an email :(';
+                email.classList.add('error');
             }
         })
     }
