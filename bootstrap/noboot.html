@@ -14,19 +14,21 @@
             <form id="regform" action="" method="">
                 <fieldset>
                     <legend>
-                        <p>Registeration Form</p>
+                        <p>Test Form</p>
                     </legend>
                     <div id="fields">
                         <div>
                             <label for="username">Username</label>
-                            <input type="text" name="username" placeholder="Username" />
+                            <input type="text" name="username" id="username" placeholder="Username" />
                         </div>
                         <div>
                             <label for="email">Email</label>
-                            <input type="email" name="email" placeholder="example@example.com" />
+                            <input type="email" name="email" id="email" placeholder="example@example.com" />
                         </div>
                         <div>
-                            <input type="submit" value="Submit" /></div>
+                            <input type="submit" value="Submit" />
+                            <span id="msg"></span>
+                        </div>
                     </div>
                 </fieldset>
             </form>
