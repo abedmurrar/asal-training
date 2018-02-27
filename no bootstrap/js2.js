@@ -4,11 +4,11 @@ function main() {
     var form = document.getElementById('regform');
     if (form) {
         var email = document.getElementById('email');
+        var span = document.getElementById('msg');
         email.addEventListener('keydown', function() {
             email.classList.remove('error');
             email.classList.remove('correct');
         })
-        var span = document.getElementById('msg');
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             if (email.value != "") {
