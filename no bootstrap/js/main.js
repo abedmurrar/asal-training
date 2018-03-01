@@ -27,7 +27,9 @@ function main() {
 }
 
 function isEmailValid(email) {
-    var regex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    email = email.toLowerCase();
+    var regex = /^[a-z|_]([a-z0-9][_\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
+    console.log(regex.exec(email));
     if (!regex.test(email))
         return false;
     return true

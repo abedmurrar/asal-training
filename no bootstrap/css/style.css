@@ -53,13 +53,13 @@ p {
 }
 
 .error {
-    background: #FFCDD2 url(error.png) no-repeat 98% center;
+    background: #FFCDD2 url(img/error.png) no-repeat 98% center;
     box-shadow: 0 0 5px #FF5252;
     border-color: #FF1744;
 }
 
 .correct {
-    background: url(correct.png) no-repeat 98%;
+    background: url(img/correct.png) no-repeat 98%;
     box-shadow: 0 0 5px rgb(97, 255, 82);
     border-color: rgb(50, 255, 23);
 }
