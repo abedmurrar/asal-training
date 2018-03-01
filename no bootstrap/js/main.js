@@ -9,7 +9,7 @@ function main() {
         var message;
         form.addEventListener('submit', function(event) {
             event.preventDefault();
-            if (email.getValue() != "") {
+            if (email.getValue().trim() != "") {
                 if (isEmailValid(email.getValue())) {
                     message = 'Email is valid !';
                     email.setCorrect();
