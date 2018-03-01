@@ -1,0 +1,18 @@
+th,
+td {
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+}
+
+table {
+    display: inline-table;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 12px;
+}
+
+body {
+    text-align: center;
+}
