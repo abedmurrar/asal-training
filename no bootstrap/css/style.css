@@ -3,35 +3,32 @@
     margin: 0;
 }
 
-fieldset #fields div {
+
+/* Form CSS */
+
+#loginform {
+    display: grid;
+    justify-content: center;
+}
+
+#loginform fieldset {
+    display: block;
+    text-align: center;
+}
+
+#loginform fieldset #fields div {
     display: block;
     padding: 15px;
     text-align: left
 }
 
-fieldset #fields div:last-child {
+#loginform fieldset #fields div:last-child {
     display: block;
     text-align: center;
 }
 
-input {
-    height: 30px;
-    padding: 0 6px;
-}
-
-input[type^="submit"] {
-    padding: 5px 15px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-}
-
-form {
-    display: grid;
-    justify-content: center;
+#loginform legend {
+    margin: 0 15px;
 }
 
 #fields {
@@ -39,27 +36,66 @@ form {
     justify-content: center;
 }
 
-fieldset {
+#loginform #fields label {
     display: block;
-    text-align: center;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-family: 'Lora', serif;
 }
 
-legend {
-    margin: 0 15px;
+#loginform #fields input {
+    height: 30px;
+    padding: 0 6px;
+    border: none;
+    outline: none;
 }
 
-p {
-    font-size: 200%;
+#loginform #fields input[type^="text"],
+#loginform #fields input[type^="email"],
+#loginform #fields input[type^="password"] {
+    border-radius: 5px 5px 0 0;
+    border-bottom: solid 2px rgb(44, 240, 247);
+    transition: 0.3s;
+    font-family: 'Trocchi', serif;
 }
 
-.error {
+#loginform #fields input[type^="text"]:hover,
+#loginform #fields input[type^="email"]:hover,
+#loginform #fields input[type^="password"]:hover {
+    border-bottom: solid 2px rgb(17, 65, 199);
+    transition: 0.5s;
+}
+
+#loginform #fields input:focus {
+    border-bottom: solid 2px rgb(17, 65, 199);
+    background: #ddd;
+    transform: scale(1.1);
+    transition: 0.3s ease-in-out;
+}
+
+#loginform #fields input[type^="submit"],
+#loginform #fields button,
+#loginform #fields input[type^="button"] {
+    padding: 5px 15px;
+}
+
+.error,
+.error:focus {
     background: #FFCDD2 url(../img/error.png) no-repeat 98% center;
     box-shadow: 0 0 5px #FF5252;
     border-color: #FF1744;
 }
 
-.correct {
+.correct,
+.correct:focus {
     background: url(../img/correct.png) no-repeat 98%;
     box-shadow: 0 0 5px rgb(97, 255, 82);
     border-color: rgb(50, 255, 23);
+}
+
+
+/* End of Form CSS */
+
+p {
+    font-size: 200%;
 }
