@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', main);
 
 function main() {
 
-    var form = document.getElementById('loginform');
+    let form = document.getElementById('loginform');
     if (form) {
-        var email = emailInput();
-        var span = spanMessage();
-        var message;
+        let email = emailInput();
+        let span = spanMessage();
+        let message;
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             if (email.getValue().trim() != "") {
@@ -28,28 +28,26 @@ function main() {
 
 function isEmailValid(email) {
     email = email.toLowerCase();
-    var regex = /^[a-z|_]([a-z0-9][_\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
-    console.log(regex.exec(email));
+    let regex = /^[a-z|_]([a-z0-9][_\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
     if (!regex.test(email))
         return false;
     return true
 }
 
 function emailInput() {
-    var email = document.getElementById('email');
-
+    let email = document.getElementById('email');
     email.addEventListener("keydown", clearClass);
 
     return {
-        setError: function() {
+        setError() {
             clearClass();
             email.classList.add('error');
         },
-        setCorrect: function() {
+        setCorrect() {
             clearClass();
             email.classList.add('correct');
         },
-        getValue: function() {
+        getValue() {
             return email.value;
         }
     }
@@ -61,10 +59,10 @@ function emailInput() {
 }
 
 function spanMessage() {
-    var span = document.getElementById('msg');
+    let span = document.getElementById('msg');
 
     return {
-        setMessage: function(msg) {
+        setMessage(msg) {
             span.innerHTML = msg;
         }
     }
