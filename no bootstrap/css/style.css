@@ -16,14 +16,13 @@
     text-align: center;
 }
 
-#loginform fieldset #fields div {
+#loginform fieldset #fields .form-fields {
     display: block;
     padding: 15px;
     text-align: left
 }
 
-#loginform fieldset #fields div:last-child {
-    display: block;
+#loginform fieldset #fields .submit-field {
     text-align: center;
 }
 
@@ -79,18 +78,23 @@
     padding: 5px 15px;
 }
 
-.error,
-.error:focus {
-    background: #FFCDD2 url(../img/error.png) no-repeat 98% center;
-    box-shadow: 0 0 5px #FF5252;
+.error {
+    background: url(../img/error.png) no-repeat 50% center;
+    /* box-shadow: 0 0 5px #FF5252; */
     border-color: #FF1744;
 }
 
-.correct,
-.correct:focus {
-    background: url(../img/correct.png) no-repeat 98%;
-    box-shadow: 0 0 5px rgb(97, 255, 82);
+.correct {
+    background: url(../img/correct.png) no-repeat 50% center;
+    /* box-shadow: 0 0 5px rgb(97, 255, 82); */
     border-color: rgb(50, 255, 23);
+}
+
+.error,
+.correct {
+    padding: 12px;
+    margin-left: 10px;
+    display: inline-flex;
 }
 
 

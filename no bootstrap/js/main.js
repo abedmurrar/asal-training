@@ -36,6 +36,7 @@ function isEmailValid(email) {
 
 function emailInput() {
     let email = document.getElementById('email');
+    let result = document.getElementsByClassName('.email-field')[0];
     email.addEventListener("keydown", clearClass);
 
     return {
