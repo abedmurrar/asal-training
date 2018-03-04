@@ -22,8 +22,16 @@
     text-align: left
 }
 
+#loginform fieldset #fields .form-fields div:first-child {
+    text-align: center;
+}
+
 #loginform fieldset #fields .submit-field {
     text-align: center;
+}
+
+#loginform fieldset #fields .form-fields .msg {
+    margin: 5px 0 5px 0;
 }
 
 #loginform legend {
@@ -40,6 +48,7 @@
     margin-bottom: 5px;
     font-weight: 600;
     font-family: 'Lora', serif;
+    text-align: left;
 }
 
 #loginform #fields input {
@@ -49,25 +58,24 @@
     outline: none;
 }
 
-#loginform #fields input[type^="text"],
-#loginform #fields input[type^="email"],
-#loginform #fields input[type^="password"] {
+#loginform #fields .datafield {
+    width: 100%;
     border-radius: 5px 5px 0 0;
     border-bottom: solid 2px rgb(44, 240, 247);
     transition: 0.3s;
     font-family: 'Trocchi', serif;
 }
 
-#loginform #fields input[type^="text"]:hover,
-#loginform #fields input[type^="email"]:hover,
-#loginform #fields input[type^="password"]:hover {
+#loginform #fields .datafield:hover:not(.error):not(.correct) {
     border-bottom: solid 2px rgb(17, 65, 199);
+    box-shadow: 0 0 1px rgb(152, 179, 255);
     transition: 0.5s;
 }
 
-#loginform #fields input:focus {
+#loginform #fields .datafield:focus:not(.error):not(.correct) {
     border-bottom: solid 2px rgb(17, 65, 199);
-    background: #ddd;
+    background: #e2e2e2;
+    box-shadow: 0 0 5px rgb(152, 179, 255);
     transform: scale(1.1);
     transition: 0.3s ease-in-out;
 }
@@ -78,28 +86,31 @@
     padding: 5px 15px;
 }
 
-.error {
-    background: url(../img/error.png) no-repeat 50% center;
-    /* box-shadow: 0 0 5px #FF5252; */
-    border-color: #FF1744;
-}
-
-.correct {
-    background: url(../img/correct.png) no-repeat 50% center;
-    /* box-shadow: 0 0 5px rgb(97, 255, 82); */
-    border-color: rgb(50, 255, 23);
-}
-
-.error,
-.correct {
-    padding: 12px;
-    margin-left: 10px;
-    display: inline-flex;
-}
-
 
 /* End of Form CSS */
 
 p {
-    font-size: 200%;
+    /* font-size: 200%; */
+}
+
+.error {
+    background: #ffd6d6 url(../img/error.png) no-repeat 98% center;
+    box-shadow: 0 0 5px #FF5252;
+    border-bottom: solid 2px red !important;
+}
+
+.error:focus {
+    transform: scale(1.1);
+    transition: 0.3s ease-in-out;
+}
+
+.correct {
+    background: #caffc6 url(../img/correct.png) no-repeat 98% center !important;
+    box-shadow: 0 0 5px rgb(97, 255, 82) !important;
+    border-color: rgb(50, 255, 23) !important;
+}
+
+.correct:focus {
+    transform: scale(1.1);
+    transition: 0.3s ease-in-out;
 }
