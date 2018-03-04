@@ -59,7 +59,10 @@ function emailInput() {
 }
 
 function spanMessage() {
-    let span = document.getElementById('msg');
+    let allfields = document.getElementsByClassName('form-fields');
+    let [, field] = allfields //[0].getElementsByClassName('msg')[0];
+    let span = field.getElementsByClassName('msg')[0];
+    console.log(span);
 
     return {
         setMessage(msg) {
