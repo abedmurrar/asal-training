@@ -59,11 +59,7 @@ function emailInput() {
 }
 
 function spanMessage() {
-    let allfields = document.getElementsByClassName('form-fields');
-    let [, field] = allfields //[0].getElementsByClassName('msg')[0];
-    let span = field.getElementsByClassName('msg')[0];
-    console.log(span);
-
+    let span = document.querySelector('.form-fields .email-field~.msg');
     return {
         setMessage(msg) {
             span.innerHTML = msg;
