@@ -3,17 +3,30 @@
     margin: 0;
 }
 
+main {
+    margin-top: 35px;
+}
+
 
 /* Form CSS */
 
 #loginform {
     display: grid;
     justify-content: center;
+    border-radius: 10px;
 }
 
 #loginform fieldset {
+    overflow: hidden;
+    border-radius: 30px;
     display: block;
     text-align: center;
+}
+
+#loginform fieldset .formHeader {
+    background: rgb(45, 240, 247);
+    padding: 15px;
+    font-family: 'Reem Kufi', sans-serif;
 }
 
 #loginform fieldset #fields .form-fields {
@@ -86,6 +99,24 @@
 #loginform #fields button,
 #loginform #fields input[type^="button"] {
     padding: 5px 15px;
+}
+
+#loginform #fields .form-fields .submit-field input[type^="submit"] {
+    background: gainsboro;
+    color: black;
+    width: 36%;
+    height: 102%;
+    padding: 6%;
+    border-radius: 7px;
+    transition: 0.3s all;
+}
+
+#loginform #fields .form-fields .submit-field input[type^="submit"]:hover {
+    box-shadow: 0 0 5px rgb(190, 190, 190);
+}
+
+#loginform #fields .form-fields .submit-field input[type^="submit"]:focus {
+    background: rgb(119, 119, 119);
 }
 
 
