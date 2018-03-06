@@ -25,9 +25,12 @@ $(function() {
         if (usernameField.val().trim() == "") {
             usernameField.addClass('error');
             usernameMsg.html('username can not be empty');
+            usernameMsg.css({
+                "opacity": "1.0"
+            });
         } else if (emailField.val().trim() == "") {
             emailField.addClass("error");
-            emailMsg.html("email is not valid");
+            emailMsg.html("email can not be empty");
             emailMsg.css({
                 "opacity": "1.0",
                 "color": "red"
@@ -37,10 +40,15 @@ $(function() {
                 emailField.addClass("error");
                 emailMsg.html("email is not valid");
                 emailMsg.css({
-                    "opacity": "1.0"
+                    "opacity": "1.0",
+                    "color": "red"
                 });
             } else if (isUserExist(user, users)) {
                 usernameField.addClass("correct");
+                usernameMsg.css({
+                    "opacity": "1.0",
+                    "color": "green"
+                });
                 emailField.addClass("correct");
                 emailMsg.html("email valid");
                 emailMsg.css({
@@ -48,20 +56,15 @@ $(function() {
                     "color": "green"
                 });
             } else {
+                usernameField.addClass("error");
                 emailField.addClass("error");
                 emailMsg.html("email does not exist");
                 emailMsg.css({
-                    "opacity": "1.0"
+                    "opacity": "1.0",
+                    "color": "red"
                 });
             }
         }
-
-        // }
-        // } else {
-
-        // }
-
-
     });
 });
 
@@ -74,14 +77,16 @@ function isEmailValid(email) {
 }
 
 function isUserExist(needle, haystack) {
-    console.log(haystack);
     console.log(needle);
-    if (needle.username == "" || needle.email == "") {
-        return false;
+    console.log(haystack);
+    let doesItExist = false;
+    if (!needle.username == "" && !needle.email == "") {
+        haystack.every(element => {
+            console.log(element.username == needle.username && element.email == needle.email);
+            if (element.username == needle.username && element.email == needle.email) {
+                doesItExist = true;
+            }
+        });
     }
-    haystack.forEach(element => {
-        if (element.username == needle.username && element.email == needle.email) {
-            return true;
-        }
-    });
+    return doesItExist;
 }
