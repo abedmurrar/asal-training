@@ -119,29 +119,32 @@ main {
     transition: 0.3s ease-in-out;
 }
 
-#loginform #fields input[type^="submit"],
-#loginform #fields button,
-#loginform #fields input[type^="button"] {
-    padding: 5px 15px;
-}
-
-#loginform #fields .form-fields .submit-field input[type^="submit"] {
-    background: gainsboro;
-    color: black;
+#loginform #fields .form-fields .submit-field #apply {
+    background: #FFF9F7;
+    color: #564D80;
     width: 36%;
     height: 102%;
     padding: 6%;
     border-radius: 7px;
+    border: 2px solid #564D80;
     transition: 0.3s all;
+    font-family: 'Lora', serif;
+    font-weight: 600;
 }
 
-#loginform #fields .form-fields .submit-field input[type^="submit"]:hover {
-    box-shadow: 0 0 5px rgb(190, 190, 190);
+#loginform #fields .form-fields .submit-field #apply:hover {
+    background: #564D80;
+    color: #FFF9F7;
 }
 
-#loginform #fields .form-fields .submit-field input[type^="submit"]:focus {
+#loginform #fields .form-fields .links {
+    margin-top: 25px;
+}
+
+
+/* #loginform #fields .form-fields .submit-field #apply:focus {
     background: rgb(119, 119, 119);
-}
+} */
 
 
 /* End of Form CSS */
