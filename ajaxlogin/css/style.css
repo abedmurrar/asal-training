@@ -1,0 +1,184 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    /* background: url(../img/hypnotize.png) repeat center; */
+    background: url(../img/brushed-alum.png), #c5deea;
+    /* Old browsers */
+    background: url(../img/brushed-alum.png), -moz-linear-gradient(-35deg, #c5deea 0%, #8abbd7 57%, #066dab 100%);
+    /* FF3.6-15 */
+    background: url(../img/brushed-alum.png), -webkit-linear-gradient(-35deg, #c5deea 0%, #8abbd7 57%, #066dab 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: url(../img/brushed-alum.png), linear-gradient(-35deg, #c5deea 0%, #8abbd7 57%, #066dab 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#c5deea', endColorstr='#066dab', GradientType=0);
+    /* IE6-9 */
+    background-size: 340px, auto;
+    min-height: calc(100vh - 100px);
+    margin: 50px;
+    /* background: white; */
+    background-position: fixed;
+    letter-spacing: -1px;
+}
+
+
+/* 
+html {
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0px;
+    min-height: 100%;
+    width: 100%;
+} */
+
+main {
+    margin-top: 35px;
+}
+
+
+/* Form CSS */
+
+#loginform {
+    display: grid;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+#loginform fieldset {
+    overflow: hidden;
+    border-radius: 30px;
+    display: block;
+    text-align: center;
+}
+
+#loginform fieldset .formHeader {
+    background: rgb(45, 240, 247);
+    padding: 15px;
+    font-family: 'Reem Kufi', sans-serif;
+}
+
+#loginform fieldset #fields .form-fields {
+    display: block;
+    padding: 15px;
+    text-align: left
+}
+
+#loginform fieldset #fields .form-fields div:first-child {
+    text-align: center;
+}
+
+#loginform fieldset #fields .submit-field {
+    text-align: center;
+}
+
+#loginform fieldset #fields .form-fields .msg {
+    margin: 5px 0 5px 0;
+}
+
+#loginform legend {
+    margin: 0 15px;
+}
+
+#fields {
+    padding: 10px 40px;
+    justify-content: center;
+}
+
+#loginform #fields label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-family: 'Lora', serif;
+    text-align: left;
+}
+
+#loginform #fields input {
+    height: 30px;
+    padding: 0 6px;
+    border: none;
+    outline: none;
+}
+
+#loginform #fields .datafield {
+    width: 100%;
+    background-color: white;
+    color: black;
+    border-radius: 5px 5px 0 0;
+    border-bottom: solid 2px rgb(44, 240, 247);
+    transition: 0.3s;
+    font-family: 'Trocchi', serif;
+}
+
+#loginform #fields .datafield:hover:not(.error):not(.correct) {
+    border-bottom: solid 2px rgb(17, 65, 199);
+    box-shadow: 0 0 1px rgb(152, 179, 255);
+    transition: 0.5s;
+}
+
+#loginform #fields .datafield:focus:not(.error):not(.correct) {
+    border-bottom: solid 2px rgb(17, 65, 199);
+    background: #e2e2e2;
+    box-shadow: 0 0 5px rgb(152, 179, 255);
+    transform: scale(1.1);
+    transition: 0.3s ease-in-out;
+}
+
+#loginform #fields input[type^="submit"],
+#loginform #fields button,
+#loginform #fields input[type^="button"] {
+    padding: 5px 15px;
+}
+
+#loginform #fields .form-fields .submit-field input[type^="submit"] {
+    background: gainsboro;
+    color: black;
+    width: 36%;
+    height: 102%;
+    padding: 6%;
+    border-radius: 7px;
+    transition: 0.3s all;
+}
+
+#loginform #fields .form-fields .submit-field input[type^="submit"]:hover {
+    box-shadow: 0 0 5px rgb(190, 190, 190);
+}
+
+#loginform #fields .form-fields .submit-field input[type^="submit"]:focus {
+    background: rgb(119, 119, 119);
+}
+
+
+/* End of Form CSS */
+
+p {
+    /* font-size: 200%; */
+}
+
+.error {
+    background: #fdc6c6 url(../img/error.png) no-repeat 98% center;
+    box-shadow: 0 0 5px #FF5252;
+    border-bottom: solid 2px red !important;
+    -webkit-text-fill-color: red !important;
+}
+
+#loginform fieldset #fields .error:focus {
+    transform: scale(1.1);
+    transition: 0.3s ease-in-out;
+}
+
+.correct {
+    background: #caffc6 url(../img/correct.png) no-repeat 98% center !important;
+    box-shadow: 0 0 5px rgb(97, 255, 82) !important;
+    border-color: rgb(50, 255, 23) !important;
+}
+
+#loginform fieldset #fields .correct:focus {
+    transform: scale(1.1);
+    transition: 0.3s ease-in-out;
+}
