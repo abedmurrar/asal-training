@@ -142,11 +142,6 @@ main {
 }
 
 
-/* #loginform #fields .form-fields .submit-field #apply:focus {
-    background: rgb(119, 119, 119);
-} */
-
-
 /* End of Form CSS */
 
 p,
@@ -154,7 +149,7 @@ a {
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
 }
 
-.error {
+#loginform fieldset #fields .error {
     background: #fdc6c6 url(../img/error.png) no-repeat 98% center;
     box-shadow: 0 0 5px #FF5252;
     border-bottom: solid 2px red !important;
@@ -166,7 +161,7 @@ a {
     transition: 0.3s ease-in-out;
 }
 
-.correct {
+#loginform fieldset #fields .correct {
     background: #caffc6 url(../img/correct.png) no-repeat 98% center !important;
     box-shadow: 0 0 5px rgb(97, 255, 82) !important;
     border-color: rgb(50, 255, 23) !important;

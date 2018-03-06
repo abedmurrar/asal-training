@@ -17,10 +17,20 @@ $(function() {
         usernameField.on("keydown", function() {
             $(this).removeClass("correct");
             $(this).removeClass("error");
+            usernameMsg.html("enter username");
+            usernameMsg.css({
+                "opacity": "0.4",
+                "color": "black"
+            });
         })
         emailField.on("keydown", function() {
             $(this).removeClass("correct");
             $(this).removeClass("error");
+            emailMsg.html("enter email");
+            emailMsg.css({
+                "opacity": "0.4",
+                "color": "black"
+            });
         });
         if (usernameField.val().trim() == "") {
             usernameField.addClass('error');
@@ -50,16 +60,16 @@ $(function() {
                     "color": "green"
                 });
                 emailField.addClass("correct");
-                emailMsg.html("email valid");
-                emailMsg.css({
+                usernameMsg.html("user exists");
+                usernameMsg.css({
                     "opacity": "1.0",
                     "color": "green"
                 });
             } else {
                 usernameField.addClass("error");
                 emailField.addClass("error");
-                emailMsg.html("email does not exist");
-                emailMsg.css({
+                usernameMsg.html("user does not exist");
+                usernameMsg.css({
                     "opacity": "1.0",
                     "color": "red"
                 });
