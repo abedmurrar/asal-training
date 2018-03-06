@@ -5,15 +5,15 @@
 
 body {
     /* background: url(../img/hypnotize.png) repeat center; */
-    background: url(../img/brushed-alum.png), #c5deea;
+    background: url(../img/brushed-alum.png), #44344F;
     /* Old browsers */
-    background: url(../img/brushed-alum.png), -moz-linear-gradient(-35deg, #c5deea 0%, #8abbd7 57%, #066dab 100%);
+    background: url(../img/brushed-alum.png), -moz-linear-gradient(45deg, #44344F 0%, #44344F 50%, #98A6D4 100%);
     /* FF3.6-15 */
-    background: url(../img/brushed-alum.png), -webkit-linear-gradient(-35deg, #c5deea 0%, #8abbd7 57%, #066dab 100%);
+    background: url(../img/brushed-alum.png), -webkit-linear-gradient(45deg, #44344F 0%, #44344F 50%, #98A6D4 100%);
     /* Chrome10-25,Safari5.1-6 */
-    background: url(../img/brushed-alum.png), linear-gradient(-35deg, #c5deea 0%, #8abbd7 57%, #066dab 100%);
+    background: url(../img/brushed-alum.png), linear-gradient(45deg, #44344F 0%, #44344F 50%, #98A6D4 100%);
     /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#c5deea', endColorstr='#066dab', GradientType=0);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#44344F', endColorstr='#98A6D4', GradientType=0);
     /* IE6-9 */
     background-size: 340px, auto;
     min-height: calc(100vh - 100px);
@@ -22,20 +22,6 @@ body {
     background-position: fixed;
     letter-spacing: -1px;
 }
-
-
-/* 
-html {
-    margin: 0px;
-    height: 100%;
-    width: 100%;
-}
-
-body {
-    margin: 0px;
-    min-height: 100%;
-    width: 100%;
-} */
 
 main {
     margin-top: 35px;
@@ -47,7 +33,6 @@ main {
 #loginform {
     display: grid;
     justify-content: center;
-    border-radius: 10px;
 }
 
 #loginform fieldset {
@@ -55,12 +40,14 @@ main {
     border-radius: 30px;
     display: block;
     text-align: center;
+    background-color: #FFF9F7;
 }
 
 #loginform fieldset .formHeader {
-    background: rgb(45, 240, 247);
+    background: #564D80;
     padding: 15px;
     font-family: 'Reem Kufi', sans-serif;
+    color: #FFF9F7;
 }
 
 #loginform fieldset #fields .form-fields {
@@ -77,8 +64,10 @@ main {
     text-align: center;
 }
 
-#loginform fieldset #fields .form-fields .msg {
+#loginform fieldset #fields .form-fields .msg:not(.links) {
     margin: 5px 0 5px 0;
+    font-size: 14px;
+    opacity: 0.4;
 }
 
 #loginform legend {
@@ -96,6 +85,7 @@ main {
     font-weight: 600;
     font-family: 'Lora', serif;
     text-align: left;
+    color: #564D80;
 }
 
 #loginform #fields input {
@@ -105,24 +95,24 @@ main {
     outline: none;
 }
 
-#loginform #fields .datafield {
+#loginform #fields .form-fields .datafield {
     width: 100%;
-    background-color: white;
+    background-color: #FFF9F7;
     color: black;
     border-radius: 5px 5px 0 0;
-    border-bottom: solid 2px rgb(44, 240, 247);
+    border-bottom: solid 2px #C2F970;
     transition: 0.3s;
     font-family: 'Trocchi', serif;
 }
 
-#loginform #fields .datafield:hover:not(.error):not(.correct) {
-    border-bottom: solid 2px rgb(17, 65, 199);
+#loginform #fields .form-fields .datafield:hover:not(.error):not(.correct) {
+    border-bottom: solid 2px #564D80;
     box-shadow: 0 0 1px rgb(152, 179, 255);
     transition: 0.5s;
 }
 
 #loginform #fields .datafield:focus:not(.error):not(.correct) {
-    border-bottom: solid 2px rgb(17, 65, 199);
+    border-bottom: solid 2px #564D80;
     background: #e2e2e2;
     box-shadow: 0 0 5px rgb(152, 179, 255);
     transform: scale(1.1);
@@ -156,8 +146,9 @@ main {
 
 /* End of Form CSS */
 
-p {
-    /* font-size: 200%; */
+p,
+a {
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
 }
 
 .error {
