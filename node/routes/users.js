@@ -67,6 +67,8 @@ router.put('/:id', function(req, res, next) {
         if (err) {
             if (err.code == 'ER_DUP_ENTRY')
                 res.status(409);
+            else if (err.code)
+                res.status(err.code);
             else
                 res.status(400);
             res.json(err);
