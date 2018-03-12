@@ -9,10 +9,20 @@
 * then run `sudo apt-get install -y nodejs`
 ### if you're using any other distribution ###
 * check https://nodejs.org/en/download/package-manager/
+
+## How to import database configurations (MySQL)##
+* if you use phpmyadmin you can easily import it from Import button
+* if you're using terminal/cmd `cd` to sql folder then `mysql -u root -p < asaltech.sql`
+* if you're using another username for MySQL change `root` to your username
+* if you're using password, a password prompt will be shown then the command will be executed after you enter your password
+* if you want to change the database name from `asaltech` to your database name then make sure to change `dbconnection.js` line 7 `database: 'asaltech'`
+
+
 ## How to install the server on your computer ##
 * cd to `/node` folder where `package.json` file exists
 * run `npm install` if Windows (you may need to run cmd as Administrator) if Linux(use sudo command)
 * then run `npm start`
+
 
 ## Server characteristics ##
 * Server works on port 3030
@@ -23,6 +33,7 @@
 * PUT http://localhost:3030/users/[id] with JSON body of (username,email,password,id)
 * HTTP PUT request can contain have a missing parameter (for example edit only email, send email only in the JSON Body), but the id parameter is essential for the process
 * DELETE http://localhost:3030/users/[id] only id in the JSON body
+* Passwords are encrypted into SHA-256
 
 ## User Characteristics ##
 * A user has an id, username, password ,and email
