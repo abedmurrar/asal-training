@@ -1,6 +1,6 @@
 # Node.js User database server #
 ## Download Node.js for any OS ##
-* go to (https://nodejs.org) and download the LTS version of Node.js
+* go to https://nodejs.org and download the LTS version of Node.js
 * run the installer
 * restart your computer to be able to run Node.js
 ## if you're using Linux Terminal ##
@@ -8,10 +8,10 @@
 * run `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
 * then run `sudo apt-get install -y nodejs`
 ### if you're using any other distribution ###
-* check (https://nodejs.org/en/download/package-manager/)
+* check https://nodejs.org/en/download/package-manager/
 ## How to install the server on your computer ##
-* cd to `node` folder where `package.json` file exists
-* run `npm install` if Windows (you may need to run cmd as Administrator) if Linux(use `sudo` command)
+* cd to `/node` folder where `package.json` file exists
+* run `npm install` if Windows (you may need to run cmd as Administrator) if Linux(use sudo command)
 * then run `npm start`
 
 ## Server characteristics ##
