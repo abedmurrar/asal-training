@@ -1,38 +1,40 @@
 var db = require('../dbconnection'); //reference of dbconnection.js
 var crypto = require('crypto');
 
+const usernameRegex = /^[a-z](([a-z0-9][_\.\-]{0,1}){6,22})[a-z]$/;
+const emailRegex = /^[a-z0-9|_]([a-z0-9][_\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
+const passwordRegex = /^.{7,}$/;
 var User = {
+
 
     getAllUsers: function(callback) {
 
-        return db.query("Select * from users", callback);
+        return db.select('*').from('users').then(callback);
+        // return db.query("Select * from users", callback);
 
     },
     getUserById: function(id, callback) {
-
-        return db.query("select * from users where user_id=?", [id], callback);
+        return db.select('*').from('users').where('id', id).then(callback);
+        // return db.query("select * from users where user_id=?", [id], callback);
     },
     addUser: function(User, callback) {
         var errors = {};
         var isValid = true;
-        var usernameRegex = /^[a-z](([a-z0-9][_\.\-]{0,1}){6,22})[a-z]$/;
-        var emailRegex = /^[a-z0-9|_]([a-z0-9][_\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
-        var passwordRegex = /^.{7,}$/;
         let username = User.username.trim().toLowerCase();
         let email = User.email.trim().toLowerCase();
         let password = User.password;
         if (username == '' || !usernameRegex.test(username)) {
             isValid = false;
-            errors["username"] = 'username is not valid';
+            errors["username"] = 'Username is not valid';
             //errors.push({ username: 'username is not valid' })
         }
         if (email == '' || !emailRegex.test(email)) {
             isValid = false;
-            errors["email"] = 'email is not valid';
+            errors["email"] = 'Email is not valid';
         }
         if (!passwordRegex.test(password)) {
             isValid = false;
-            errors["password"] = 'password must be at least 7 characters';
+            errors["password"] = 'Password must be at least 7 characters';
         }
         if (isValid) {
             let passwordEncoded = crypto.createHash('sha256').update(password).digest('hex');
@@ -49,21 +51,18 @@ var User = {
             var errors = {};
             var sql = 'update users set '
             var entries = [];
-            var usernameRegex = /^[a-z](([a-z0-9][_\.\-]{0,1}){6,22})[a-z]$/;
-            var emailRegex = /^[a-z0-9|_]([a-z0-9][_\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
-            var passwordRegex = /^.{7,}$/;
             let username = User.username.trim().toLowerCase();
             let email = User.email.trim().toLowerCase();
             let password = User.password;
             if (username == '' || !usernameRegex.test(username)) {
-                errors["username"] = 'username is not valid';
+                errors["username"] = 'Username is not valid';
                 //errors.push({ username: 'username is not valid' })
             } else {
                 entries.push(username);
                 sql += 'username = ?'
             }
             if (email == '' || !emailRegex.test(email)) {
-                errors["email"] = 'email is not valid';
+                errors["email"] = 'Email is not valid';
             } else {
                 entries.push(email);
                 if (entries.length > 0)
@@ -72,7 +71,7 @@ var User = {
                     sql += 'email = ?';
             }
             if (password == '' || !passwordRegex.test(password)) {
-                errors["password"] = 'password must be at least 7 characters';
+                errors["password"] = 'Password must be at least 7 characters';
             } else {
                 let passwordEncoded = crypto.createHash('sha256').update(password).digest('hex');
                 entries.push(passwordEncoded);
@@ -92,7 +91,7 @@ var User = {
             }
             callback(errors);
         } catch (error) {
-            callback({ code: 500, failure: "invalid data format or empty data" });
+            callback({ code: 500, failure: "Invalid data format or empty data" });
         }
 
     }
