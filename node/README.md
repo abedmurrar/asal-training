@@ -19,7 +19,6 @@
 
 
 ## How to install the server on your computer ##
-* cd to `/node` folder where `package.json` file exists
 * run `npm install` if Windows (you may need to run cmd as Administrator) if Linux(use sudo command)
 * then run `npm start`
 
