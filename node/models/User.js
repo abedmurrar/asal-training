@@ -4,94 +4,113 @@ var crypto = require('crypto');
 const usernameRegex = /^[a-z](([a-z0-9][_\.\-]{0,1}){6,22})[a-z]$/;
 const emailRegex = /^[a-z0-9|_]([a-z0-9][_\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
 const passwordRegex = /^.{7,}$/;
+const table = 'users';
 var User = {
 
-
-    getAllUsers: function(callback) {
-
-        return db.select('*').from('users').then(callback);
-        // return db.query("Select * from users", callback);
-
+    getAllUsers: function(success, failure) {
+        return
+        db(table)
+            .select('*')
+            .then(success)
+            .catch(failure);
     },
-    getUserById: function(id, callback) {
-        return db.select('*').from('users').where('id', id).then(callback);
-        // return db.query("select * from users where user_id=?", [id], callback);
+    getUserById: function(id, success, failure) {
+        return
+        db(table)
+            .select('*')
+            .where('id', id)
+            .then(success)
+            .catch(failure);
     },
-    addUser: function(User, callback) {
+    addUser: function(User, success, failure) {
         var errors = {};
         var isValid = true;
-        let username = User.username.trim().toLowerCase();
-        let email = User.email.trim().toLowerCase();
-        let password = User.password;
-        if (username == '' || !usernameRegex.test(username)) {
-            isValid = false;
-            errors["username"] = 'Username is not valid';
-            //errors.push({ username: 'username is not valid' })
-        }
-        if (email == '' || !emailRegex.test(email)) {
-            isValid = false;
-            errors["email"] = 'Email is not valid';
-        }
-        if (!passwordRegex.test(password)) {
-            isValid = false;
-            errors["password"] = 'Password must be at least 7 characters';
-        }
-        if (isValid) {
-            let passwordEncoded = crypto.createHash('sha256').update(password).digest('hex');
-            return db.query("Insert into users(username,email,password) values(?,?,?)", [username, email, passwordEncoded], callback);
-        }
-        errors["code"] = 400;
-        callback(errors);
-    },
-    deleteUser: function(id, callback) {
-        return db.query("delete from users where user_id=?", [id], callback);
-    },
-    updateUser: function(id, User, callback) {
         try {
-            var errors = {};
-            var sql = 'update users set '
-            var entries = [];
             let username = User.username.trim().toLowerCase();
             let email = User.email.trim().toLowerCase();
             let password = User.password;
             if (username == '' || !usernameRegex.test(username)) {
+                isValid = false;
                 errors["username"] = 'Username is not valid';
                 //errors.push({ username: 'username is not valid' })
-            } else {
-                entries.push(username);
-                sql += 'username = ?'
             }
             if (email == '' || !emailRegex.test(email)) {
+                isValid = false;
                 errors["email"] = 'Email is not valid';
-            } else {
-                entries.push(email);
-                if (entries.length > 0)
-                    sql += ',email = ?';
-                else
-                    sql += 'email = ?';
             }
-            if (password == '' || !passwordRegex.test(password)) {
+            if (!passwordRegex.test(password)) {
+                isValid = false;
                 errors["password"] = 'Password must be at least 7 characters';
-            } else {
-                let passwordEncoded = crypto.createHash('sha256').update(password).digest('hex');
-                entries.push(passwordEncoded);
-                if (entries.length > 0)
-                    sql += ',password = ?';
-                else
-                    sql += 'password = ?';
             }
-            if (entries.length > 0) {
-                entries.push(id);
-                sql += ' where user_id=?';
-                return db.query(sql, entries, callback);
+            if (isValid) {
+                let passwordEncoded = crypto.createHash('sha256').update(password).digest('hex');
+                return
+                db(table)
+                    .insert({ username: username, password: passwordEncoded, email: email })
+                    .then(success)
+                    .catch(failure);
+                // return db.query("Insert into users(username,email,password) values(?,?,?)", [username, email, passwordEncoded], success,failure);
+            }
+            errors["code"] = 400;
+            failure(errors);
+
+        } catch (error) {
+            return failure();
+        }
+    },
+    deleteUser: function(id, success, failure) {
+        return db(table).del().where('id', id)
+            .then(success)
+            .catch(failure);
+    },
+    updateUser: function(id, User, success, failure) {
+        try {
+            var errors = {};
+            var entries = {};
+            if (User.username) {
+                let username = User.username.trim().toLowerCase();
+                if (!username.length || !usernameRegex.test(username)) {
+                    errors["username"] = 'Username is not valid';
+                } else {
+                    entries.username = username;
+                }
+            }
+            if (User.email) {
+                let email = User.email.trim().toLowerCase();
+                if (!email.length || !emailRegex.test(email)) {
+                    errors["email"] = 'Email is not valid';
+                } else {
+                    entries.email = email;
+                }
+            }
+            if (User.password) {
+                let password = User.password;
+                if (!password.length || !passwordRegex.test(password)) {
+                    errors["password"] = 'Password must be at least 7 characters';
+                } else {
+                    password =
+                        crypto
+                        .createHash('sha256')
+                        .update(password)
+                        .digest('hex');
+                    entries.password = password;
+                }
+            }
+            if (Object.keys(entries).length) {
+                return
+                db(table)
+                    .update(entries)
+                    .where('id', id)
+                    .then(success)
+                    .catch(failure);
             } else if (entries.length == 0) {
                 errors["code"] = 422;
             } else {
                 errors["code"] = 400;
             }
-            callback(errors);
+            success, failure(errors);
         } catch (error) {
-            callback({ code: 500, failure: "Invalid data format or empty data" });
+            failure({ code: 500, failure: "Invalid data format!" });
         }
 
     }
