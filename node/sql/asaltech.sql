@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 12, 2018 at 05:38 PM
+-- Generation Time: Mar 15, 2018 at 12:21 AM
 -- Server version: 5.7.21-0ubuntu0.17.10.1
 -- PHP Version: 7.0.25-0ubuntu0.16.04.1
 
@@ -30,24 +30,15 @@ USE `asaltech`;
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(64) NOT NULL,
-  PRIMARY KEY (`user_id`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`user_id`, `username`, `email`, `password`) VALUES
-(2, 'ahmad.murrar', 'ahmadsakhleh@asaltech.com', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225'),
-(3, 'abed.murrar', 'abedmurrar@gmail.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),
-(4, 'abed.murrar56', 'abedmu56rrar@gmail.com', 'd69c1bd6763a9f1e56c320d521158f77ad61e3fd5cd94c03fa5ed245f3ac8427'),
-(7, 'abed.murrar568', 'ab8edmu56rrar@gmail.com', 'd69c1bd6763a9f1e56c320d521158f77ad61e3fd5cd94c03fa5ed245f3ac8427');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
