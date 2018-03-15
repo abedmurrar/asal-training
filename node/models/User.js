@@ -1,10 +1,34 @@
 var db = require('../dbconnection'); //reference of dbconnection.js
-var crypto = require('crypto');
+var crypto = require('crypto'); //crypto package
+var HttpStatus = require('http-status-codes'); //http status codes package
 
-const usernameRegex = /^[a-z](([a-z0-9][_\.\-]{0,1}){6,22})[a-z]$/;
-const emailRegex = /^[a-z0-9|_]([a-z0-9][_\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
+const usernameRegex = /^[a-z](([\w][\.\-]{0,1}){6,22})[a-z]$/;
+/*
+ * Username Regular Expression
+ * a username must start and end with an alphabet
+ * a username at least 7 characters and at most 24 characters of alphabets and digits
+ * can contain [.] dot but not repeatedly, [-] dash but not repeatedly, and [_] underscore 
+ */
+const emailRegex = /^[\w]([\w][\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
+/*
+ * Email Regular Expression
+ * an email is validated with respect to some of the RFC 5322 Syntax
+ * https://tools.ietf.org/html/rfc5322
+ */
 const passwordRegex = /^.{7,}$/;
-const table = 'users';
+/*
+ * Password Regular Expression
+ * a password must contain at least 7 characters
+ */
+const table = 'users'; //database table name
+
+/*
+ * id       -> Integer, id of the row (or user)
+ * User     -> Object with attributes of (username,email,password)
+ * success  -> Function to call if no errors were caught
+ * failure  -> Function to call if errors were caught
+ */
+
 var User = {
 
     getAllUsers: function(success, failure) {
@@ -32,7 +56,6 @@ var User = {
             if (username == '' || !usernameRegex.test(username)) {
                 isValid = false;
                 errors["username"] = 'Username is not valid';
-                //errors.push({ username: 'username is not valid' })
             }
             if (email == '' || !emailRegex.test(email)) {
                 isValid = false;
@@ -49,12 +72,12 @@ var User = {
                     .insert({ username: username, password: passwordEncoded, email: email })
                     .then(success)
                     .catch(failure);
-                // return db.query("Insert into users(username,email,password) values(?,?,?)", [username, email, passwordEncoded], success,failure);
             }
-            errors["code"] = 400;
+            errors["code"] = HttpStatus.BAD_REQUEST;
             failure(errors);
 
         } catch (error) {
+            // if a User object was passed but didn't have one of the three attributes
             return failure();
         }
     },
@@ -104,13 +127,13 @@ var User = {
                     .then(success)
                     .catch(failure);
             } else if (entries.length == 0) {
-                errors["code"] = 422;
+                errors["code"] = HttpStatus.UNPROCESSABLE_ENTITY;
             } else {
-                errors["code"] = 400;
+                errors["code"] = HttpStatus.BAD_REQUEST;
             }
             success, failure(errors);
         } catch (error) {
-            failure({ code: 500, failure: "Invalid data format!" });
+            failure({ code: HttpStatus.INTERNAL_SERVER_ERROR, failure: "Invalid data format!" });
         }
 
     }
