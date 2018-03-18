@@ -7,13 +7,38 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var helmet = require('helmet');
+var session = require('express-session');
 // var Tasks = require('./routes/Tasks');
 var app = express();
+//setting up domain for developlment
+//should be changed for production
+const DOMAIN = 'http://localhost:8080';
+
+
+//setting sessions
+app.use(session({
+    secret: 'my-application',
+    resave: true,
+    cookie: { cookie: false },
+    saveUninitialized: true
+}));
+
+// setting header security
+app.use(helmet());
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
+app.use(helmet.noCache());
+app.use(helmet.noSniff());
+// app.use(helmet.contentSecurityPolicy({
+//     directives: {
+//         defaultSrc: ["'self'"]
+//     }
+// }));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.engine('html', require('ejs').renderFile)
-app.set('view engine', 'html');
+// app.engine('html', require('ejs').renderFile)
+app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -27,8 +52,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 // app.use('/Tasks', Tasks);
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', DOMAIN);
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -39,18 +67,20 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
+
+    app.use((err, req, res, next) => {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
             error: err
         });
+        next(err);
     });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
