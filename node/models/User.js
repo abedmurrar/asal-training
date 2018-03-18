@@ -31,22 +31,20 @@ const table = 'users'; //database table name
 
 var User = {
 
-    getAllUsers: function(success, failure) {
-        return
-        db(table)
+    getAllUsers: (success, failure) => {
+        return db(table)
             .select('*')
             .then(success)
             .catch(failure);
     },
-    getUserById: function(id, success, failure) {
-        return
-        db(table)
+    getUserById: (id, success, failure) => {
+        return db(table)
             .select('*')
             .where('id', id)
             .then(success)
             .catch(failure);
     },
-    addUser: function(User, success, failure) {
+    addUser: (User, success, failure) => {
         var errors = {};
         var isValid = true;
         try {
@@ -67,8 +65,8 @@ var User = {
             }
             if (isValid) {
                 let passwordEncoded = crypto.createHash('sha256').update(password).digest('hex');
-                return
-                db(table)
+                console.log(passwordEncoded);
+                return db(table)
                     .insert({ username: username, password: passwordEncoded, email: email })
                     .then(success)
                     .catch(failure);
@@ -81,12 +79,14 @@ var User = {
             return failure();
         }
     },
-    deleteUser: function(id, success, failure) {
-        return db(table).del().where('id', id)
+    deleteUser: (id, success, failure) => {
+        return db(table)
+            .del()
+            .where('id', id)
             .then(success)
             .catch(failure);
     },
-    updateUser: function(id, User, success, failure) {
+    updateUser: (id, User, success, failure) => {
         try {
             var errors = {};
             var entries = {};
@@ -111,17 +111,15 @@ var User = {
                 if (!password.length || !passwordRegex.test(password)) {
                     errors["password"] = 'Password must be at least 7 characters';
                 } else {
-                    password =
-                        crypto
+                    password = crypto
                         .createHash('sha256')
                         .update(password)
                         .digest('hex');
                     entries.password = password;
                 }
             }
-            if (Object.keys(entries).length) {
-                return
-                db(table)
+            if (Object.keys(entries).length > 0) {
+                return db(table)
                     .update(entries)
                     .where('id', id)
                     .then(success)
@@ -131,11 +129,35 @@ var User = {
             } else {
                 errors["code"] = HttpStatus.BAD_REQUEST;
             }
-            success, failure(errors);
+            failure(errors);
         } catch (error) {
             failure({ code: HttpStatus.INTERNAL_SERVER_ERROR, failure: "Invalid data format!" });
         }
 
+    },
+    isExist: (User, success, failure) => {
+        return db(table)
+            .select('*')
+            .where('username', User.username)
+            .andWhere('email', User.email)
+            .andWhere('password', User.password)
+            .then(success)
+            .catch(failure);
+    },
+    login: (User, success, failure) => {
+        if (User.username && User.username.length && User.password && User.password.length) {
+            return db(table)
+                .select('username', 'password')
+                .where('username', User.username)
+                .andWhere('password', crypto
+                    .createHash('sha256')
+                    .update(User.password)
+                    .digest('hex'))
+                .then(success)
+                .catch(failure);
+        } else {
+            failure({ error: HttpStatus.UNPROCESSABLE_ENTITY, failure: 'Invalid data format' });
+        }
     }
 
 };
