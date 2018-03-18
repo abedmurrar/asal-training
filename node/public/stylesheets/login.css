@@ -1,0 +1,76 @@
+:root {
+    --primary-color: #852626;
+    --primary-text-color: white;
+    --border-color: #423c3c;
+}
+
+#loginForm {
+    border-radius: 15px;
+    overflow: hidden;
+    border: 3px solid var(--border-color);
+}
+
+#loginForm header,
+#loginForm footer {
+    padding: 5px 0 5px 0;
+    background-color: var(--primary-color);
+    border-color: var(--border-color);
+}
+
+#loginForm header {
+    color: var(--primary-text-color);
+    border-bottom: solid 5px;
+    padding: 10px;
+}
+
+#loginForm main {
+    padding: 10px;
+    font-family: 'Vollkorn', serif;
+    color: black;
+    background-color: white;
+}
+
+#loginForm main input:not([type^="button"]) {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    color: black;
+    background: white;
+    /* -webkit-transition: 0.5s; */
+    /* transition: 0.5s; */
+    outline: none;
+}
+
+#loginForm main input:not([type^="button"]):hover {
+    border-bottom: 3px solid #555;
+    transition: 0.5s;
+}
+
+#loginForm main input:not([type^="button"]):focus {
+    border: 3px solid #555;
+    transition: 0.5s;
+}
+
+#loginForm footer {
+    border-top: solid 3px var(--border-color);
+    text-align: right;
+}
+
+#loginForm footer input[type^="submit"] {
+    padding: 10px;
+    outline: none;
+    margin: 5px 10px 5px 5px;
+    border: 1px solid;
+    border-radius: 10px;
+    color: black;
+    background: white;
+}
+
+#loginForm footer input[type^="submit"]:hover {
+    background: #999;
+    transition: 0.2s;
+    color: white;
+    background: green;
+}
