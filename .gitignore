@@ -2,3 +2,4 @@ node/node_modules/
 *.log
 .idea
 .vscode
+.eslintrc.js
