@@ -1,37 +1,40 @@
 # Node.js User database server #
 ## Download Node.js for any OS ##
-* go to https://nodejs.org and download the LTS version of Node.js
-* run the installer
-* restart your computer to be able to run Node.js
-## if you're using Linux Terminal ##
-### if you're using Ubuntu ###
-* run `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
-* then run `sudo apt-get install -y nodejs`
-### if you're using any other distribution ###
-* check https://nodejs.org/en/download/package-manager/
+* Go to https://nodejs.org and download the LTS version of Node.js
+* Run the installer
+* Restart your computer to be able to run Node.js
+## If you're using Linux Terminal ##
+### If you're using Ubuntu ###
+* Run `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
+* Then run `sudo apt-get install -y nodejs`
+### If you're using any other distribution ###
+* Check https://nodejs.org/en/download/package-manager/
 
 ## How to import database configurations (MySQL)##
-* if you use phpmyadmin you can easily import it from Import button
-* if you're using terminal/cmd `cd` to sql folder then `mysql -u root -p < asaltech.sql`
-* if you're using another username for MySQL change `root` to your username
-* if you're using password, a password prompt will be shown then the command will be executed after you enter your password
-* if you want to change the database name from `asaltech` to your database name then make sure to change `dbconnection.js` line 7 `database: 'asaltech'`
+* If you use phpmyadmin you can easily import it from Import button
+* If you're using terminal/cmd `cd` to sql folder then `mysql -u root -p < asaltech.sql`
+* If you're using another username for MySQL change `root` to your username
+* If you're using password, a password prompt will be shown then the command will be executed after you enter your password
+* If you want to change the database name from `asaltech` to your database name then make sure to change `dbconnection.js` line 7 `database: 'asaltech'`
 
 
 ## How to install the server on your computer ##
-* run `npm install` if Windows (you may need to run cmd as Administrator) if Linux(use sudo command)
-* then run `npm start`
+* Run `npm install` if Windows (you may need to run cmd as Administrator) if Linux(use sudo command)
+* To debug the server run `DEBUG=* npm start`
+* If you don't want to debug use `npm start`
+* For monitoring server use `pm2` package, for more info check http://pm2.keymetrics.io/
 
 
 ## Server characteristics ##
-* Server works on port 3030
+* Server is a single page application 
+* Server works on port 8080
 * server can edit, delete, insert and get users
-* you can use any REST client to test the server
-* GET http://localhost:3030/users/ to get all users
-* POST http://localhost:3030/users/ with JSON body of (username,email,password)
-* PUT http://localhost:3030/users/[id] with JSON body of (username,email,password,id)
+* You can use any REST client to test the server
+* GET http://localhost:8080/users/ to get all users
+* POST http://localhost:8080/users/ with JSON body of (username,email,password)
+* PUT http://localhost:8080/users/[id] with JSON body of (username,email,password,id)
 * HTTP PUT request can contain have a missing parameter (for example edit only email, send email only in the JSON Body), but the id parameter is essential for the process
-* DELETE http://localhost:3030/users/[id] only id in the JSON body
+* DELETE http://localhost:8080/users/[id] only id in the JSON body
 * Passwords are encrypted into SHA-256
 
 ## User Characteristics ##
@@ -44,4 +47,4 @@
 * An email will be checked for validity before the user inserted to database
 * A password must at least contain 7 characters
 * If any attribute of username,password, and email, turned out to be invalid, the user will not be inserted to database
-* if a user was edited with a mixture of valid and invalid attributes, only valid attributes will be changed
+* If a user was edited with a mixture of valid and invalid attributes, only valid attributes will be changed
