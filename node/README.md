@@ -1,40 +1,52 @@
 # Node.js User database server #
 ## Download Node.js for any OS ##
-* Go to https://nodejs.org and download the LTS version of Node.js
+* Go to [Node.js Website](https://nodejs.org) and download the LTS version of Node.js
 * Run the installer
 * Restart your computer to be able to run Node.js
 ## If you're using Linux Terminal ##
 ### If you're using Ubuntu ###
-* Run `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
-* Then run `sudo apt-get install -y nodejs`
+Run the following commands in your terminal
+```sh
+$ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+$ sudo apt-get install -y nodejs
+```
 ### If you're using any other distribution ###
-* Check https://nodejs.org/en/download/package-manager/
+* Check [Node.js downloads](https://nodejs.org/en/download/package-manager/)
 
-## How to import database configurations (MySQL)##
+## How to import database configurations (MySQL) ##
 * If you use phpmyadmin you can easily import it from Import button
-* If you're using terminal/cmd `cd` to sql folder then `mysql -u root -p < asaltech.sql`
-* If you're using another username for MySQL change `root` to your username
+* Using terminal/cmd
+```sh
+$ cd sql/
+$ mysql -u root -p < asaltech.sql
+```
+* If you're using another username for MySQL change __root__ in the command to your username
 * If you're using password, a password prompt will be shown then the command will be executed after you enter your password
-* If you want to change the database name from `asaltech` to your database name then make sure to change `dbconnection.js` line 7 `database: 'asaltech'`
 
 
 ## How to install the server on your computer ##
 * Run `npm install` if Windows (you may need to run cmd as Administrator) if Linux(use sudo command)
 * To debug the server run `DEBUG=* npm start`
-* If you don't want to debug use `npm start`
-* For monitoring server use `pm2` package, for more info check http://pm2.keymetrics.io/
+* If you don't want to debug use `npm start` instead
+* For monitoring server use __pm2__ package, for more info check [pm2 Website](http://pm2.keymetrics.io/)
 
 
 ## Server characteristics ##
 * Server is a single page application 
-* Server works on port 8080
+* Server works on port **8080**
 * server can edit, delete, insert and get users
 * You can use any REST client to test the server
-* GET http://localhost:8080/users/ to get all users
-* POST http://localhost:8080/users/ with JSON body of (username,email,password)
-* PUT http://localhost:8080/users/[id] with JSON body of (username,email,password,id)
-* HTTP PUT request can contain have a missing parameter (for example edit only email, send email only in the JSON Body), but the id parameter is essential for the process
-* DELETE http://localhost:8080/users/[id] only id in the JSON body
+
+
+| HTTP method | link | Action |
+| ----- |:-----:| ----- |
+| GET | localhost:8080/users/ | get all users |
+
+* **GET** http://localhost:8080/users/ to get all users
+* **POST** http://localhost:8080/users/ with JSON body of (username,email,password)
+* **PUT** http://localhost:8080/users/[id] with JSON body of (username,email,password,id)
+* HTTP **PUT** request can contain have a missing parameter (for example edit only email, send email only in the JSON Body), but the id parameter is essential for the process
+* **DELETE** http://localhost:8080/users/[id] only id in the JSON body
 * Passwords are encrypted into SHA-256
 
 ## User Characteristics ##
