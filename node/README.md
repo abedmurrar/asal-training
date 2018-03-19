@@ -36,18 +36,16 @@ $ mysql -u root -p < asaltech.sql
 * Server works on port **8080**
 * server can edit, delete, insert and get users
 * You can use any REST client to test the server
-
-
-| HTTP method | link | Action |
-| ----- |:-----:| ----- |
-| GET | localhost:8080/users/ | get all users |
-
-* **GET** http://localhost:8080/users/ to get all users
-* **POST** http://localhost:8080/users/ with JSON body of (username,email,password)
-* **PUT** http://localhost:8080/users/[id] with JSON body of (username,email,password,id)
-* HTTP **PUT** request can contain have a missing parameter (for example edit only email, send email only in the JSON Body), but the id parameter is essential for the process
-* **DELETE** http://localhost:8080/users/[id] only id in the JSON body
 * Passwords are encrypted into SHA-256
+-------------------
+|HTTP method| Link | Action |
+|:-----:|:-----:|:-----:|
+| GET | localhost:8080/users | Get all users|
+| GET | localhost:8080/users/[**id**] | Get user by id
+| POST | localhost:8080/users | Insert new user, check [examples](#markdown-header-examples)
+| PUT | localhost:8080/users/[**id**] | Edit user, check [examples](#markdown-header-examples) |
+| DELETE | localhost:8080/users/[**id**] | Delete user from database
+
 
 ## User Characteristics ##
 * A user has an id, username, password ,and email
@@ -60,3 +58,41 @@ $ mysql -u root -p < asaltech.sql
 * A password must at least contain 7 characters
 * If any attribute of username,password, and email, turned out to be invalid, the user will not be inserted to database
 * If a user was edited with a mixture of valid and invalid attributes, only valid attributes will be changed
+
+--------------------
+## Examples ##
+### POST ###
+POST is used to insert a new user into database, POST can be acheived using JSON body with the required fields :
+* username
+* password
+* email
+
+```json
+{
+    "username": "john.doe",
+    "password": "my123p@ssw0rd",
+    "email": "john.doe@example.com"
+}
+```
+
+### PUT ###
+PUT is used to edit a user's attribute which is one of the following :
+* username
+* password
+* email
+
+PUT can have a missing attribute in the JSON body, for example, to change the email only :
+```json
+{
+    "email":"new.email@example.com"
+}
+```
+
+To change the username and password :
+```json
+{
+    "username":"new_username",
+    "password":"newPASS\/\/0Rd"
+}
+```
+All fields can be edited at once too.
