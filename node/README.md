@@ -3,16 +3,14 @@
 * Go to [Node.js Website](https://nodejs.org) and download the LTS version of Node.js
 * Run the installer
 * Restart your computer to be able to run Node.js
-## If you're using Linux Terminal ##
-### If you're using Ubuntu ###
-Run the following commands in your terminal
-```sh
-$ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-$ sudo apt-get install -y nodejs
-```
-### If you're using any other distribution ###
-* Check [Node.js downloads](https://nodejs.org/en/download/package-manager/)
-
+    ### If you're using Linux Terminal ###
+    * If you're using __Ubuntu/Debian__, run the following commands in your terminal :
+    ```sh
+    $ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+    $ sudo apt-get install -y nodejs
+    ```
+    * If you're using any other distribution/OS, check [Node.js downloads](https://nodejs.org/en/download/package-manager/)
+------------
 ## How to import database configurations (MySQL) ##
 * If you use phpmyadmin you can easily import it from Import button
 * Using terminal/cmd
@@ -23,46 +21,53 @@ $ mysql -u root -p < asaltech.sql
 * If you're using another username for MySQL change __root__ in the command to your username
 * If you're using password, a password prompt will be shown then the command will be executed after you enter your password
 
-
+-----------------
 ## How to install the server on your computer ##
-* Run `npm install` if Windows (you may need to run cmd as Administrator) if Linux(use sudo command)
+* Run `npm install` (you may need to run cmd as Administrator, or use sudo command for Linux)
 * To debug the server run `DEBUG=* npm start`
 * If you don't want to debug use `npm start` instead
 * For monitoring server use __pm2__ package, for more info check [pm2 Website](http://pm2.keymetrics.io/)
 
-
+------------------
 ## Server characteristics ##
 * Server is a single page application 
 * Server works on port **8080**
 * server can edit, delete, insert and get users
 * You can use any REST client to test the server
 * Passwords are encrypted into SHA-256
--------------------
+
+### User Operations
 |HTTP method| Link | Action |
 |:-----:|:-----:|:-----:|
-| GET | localhost:8080/users | Get all users|
-| GET | localhost:8080/users/[**id**] | Get user by id
-| POST | localhost:8080/users | Insert new user, check [examples](#markdown-header-examples)
-| PUT | localhost:8080/users/[**id**] | Edit user, check [examples](#markdown-header-examples) |
-| DELETE | localhost:8080/users/[**id**] | Delete user from database
+| GET | `localhost:8080/users` | Get all users|
+| GET | `localhost:8080/users/[id]` | Get user by id
+| POST | `localhost:8080/users` | Insert new user, check [examples](#markdown-header-examples)
+| PUT | `localhost:8080/users/[id]` | Edit user, check [examples](#markdown-header-examples) |
+| DELETE | `localhost:8080/users/[id]` | Delete user from database
 
-
+---------
 ## User Characteristics ##
 * A user has an id, username, password ,and email
-* A username is a unique attribute for all users meaning no two users can have the same username
-* A username can have at least 7 characters and maximum of 24 characters
-* A username can contain uppercase and lowercase letters, dot [.], underscore [_], and dash [-]
-* A username must start with a letter and end with a letter
-* A username can not contain sequentially repeated special characters such as dot, underscore, and dash (for example the username 'john..doe' is not valid)
-* An email will be checked for validity before the user inserted to database
-* A password must at least contain 7 characters
+    ### Username ###
+    * A username is a unique attribute for all users meaning no two users can have the same username
+    * A username can have at least 7 characters and maximum of 24 characters
+    * A username can contain uppercase and lowercase letters, dot [.], underscore [_], and dash [-]
+    * A username can not contain sequentially repeated special characters such as dot, underscore, and dash (for example the username 'john..doe' is not valid)
+    * A username must start with a letter and end with a letter
+    
+
+    ### Email ##
+    * An email will be checked for validity before the user inserted to database
+    ### Password ###
+    * A password must at least contain 7 characters
+
 * If any attribute of username,password, and email, turned out to be invalid, the user will not be inserted to database
-* If a user was edited with a mixture of valid and invalid attributes, only valid attributes will be changed
+* If a user was __edited__ with a mixture of valid and invalid attributes, only valid attributes will be changed
 
 --------------------
 ## Examples ##
 ### POST ###
-POST is used to insert a new user into database, POST can be acheived using JSON body with the required fields :
+POST is used to insert a new user into database, POST can be acheived using JSON body with the <span style="color: red">__required__</span> fields :
 * username
 * password
 * email
