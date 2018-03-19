@@ -1,23 +1,24 @@
 # Node.js User database server #
+-------------
 ## Download Node.js for any OS ##
 * Go to [Node.js Website](https://nodejs.org) and download the LTS version of Node.js
 * Run the installer
 * Restart your computer to be able to run Node.js
     ### If you're using Linux Terminal ###
     * If you're using __Ubuntu/Debian__, run the following commands in your terminal :
-    ```sh
-    $ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-    $ sudo apt-get install -y nodejs
-    ```
+        ```sh
+        curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+        ```
     * If you're using any other distribution/OS, check [Node.js downloads](https://nodejs.org/en/download/package-manager/)
 ------------
 ## How to import database configurations (MySQL) ##
 * If you use phpmyadmin you can easily import it from Import button
 * Using terminal/cmd
-```sh
-$ cd sql/
-$ mysql -u root -p < asaltech.sql
-```
+    ```sh
+    cd sql/
+    mysql -u root -p < asaltech.sql
+    ```
 * If you're using another username for MySQL change __root__ in the command to your username
 * If you're using password, a password prompt will be shown then the command will be executed after you enter your password
 
@@ -60,14 +61,17 @@ $ mysql -u root -p < asaltech.sql
     * An email will be checked for validity before the user inserted to database
     ### Password ###
     * A password must at least contain 7 characters
+    ---------
 
 * If any attribute of username,password, and email, turned out to be invalid, the user will not be inserted to database
 * If a user was __edited__ with a mixture of valid and invalid attributes, only valid attributes will be changed
 
 --------------------
 ## Examples ##
-### POST ###
-POST is used to insert a new user into database, POST can be acheived using JSON body with the <span style="color: red">__required__</span> fields :
+
+### POST
+
+__POST__ is used to insert a new user into database. POST can be acheived using JSON body with the __required__ fields :
 * username
 * password
 * email
@@ -79,7 +83,7 @@ POST is used to insert a new user into database, POST can be acheived using JSON
     "email": "john.doe@example.com"
 }
 ```
-
+--------
 ### PUT ###
 PUT is used to edit a user's attribute which is one of the following :
 * username
