@@ -2,6 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Comfortaa', cursive;
 }
 
 html,
@@ -16,9 +17,10 @@ main {
 }
 
 nav.tabs {
-    display: flex;
+    display: block;
     background: white;
     box-shadow: 0px -2px 35px black;
+    height: 60px;
 }
 
 nav.tabs a {
@@ -27,6 +29,10 @@ nav.tabs a {
     padding: 20px;
     color: black;
     transition: 0.2s;
+}
+
+nav.tabs a.right {
+    float: right;
 }
 
 nav.tabs a:hover {
