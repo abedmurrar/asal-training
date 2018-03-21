@@ -49,12 +49,16 @@ var User = {
             .catch(failure);
     },
     getUserByUsername: (username, success, failure) => {
-        return db(table)
-            .select('*')
-            .where('username', username)
-            .first()
-            .then(success)
-            .catch(failure);
+        if (username.length) {
+            return db(table)
+                .select('*')
+                .where('username', username)
+                .first()
+                .then(success)
+                .catch(failure);
+        } else {
+            failure({ msg: 'Empty request' });
+        }
     },
     addUser: (User, success, failure) => {
         var errors = {};
@@ -82,7 +86,6 @@ var User = {
                     .then(success)
                     .catch(failure);
             }
-            errors["code"] = HttpStatus.BAD_REQUEST;
             failure(errors);
 
         } catch (error) {
@@ -135,28 +138,12 @@ var User = {
                     .where('id', id)
                     .then(success)
                     .catch(failure);
-            } else if (entries.length == 0) {
-                errors["code"] = HttpStatus.UNPROCESSABLE_ENTITY;
-            } else {
-                errors["code"] = HttpStatus.BAD_REQUEST;
             }
             failure(errors);
         } catch (error) {
             failure({ code: HttpStatus.INTERNAL_SERVER_ERROR, failure: "Invalid data format!" });
         }
 
-    },
-    login: (username, success, failure) => {
-        if (username.length) {
-            return db(table)
-                .select('*')
-                .where('username', username)
-                .first()
-                .then(success)
-                .catch(failure);
-        } else {
-            failure({ success: false, error: HttpStatus.UNPROCESSABLE_ENTITY, message: 'Empty request' });
-        }
     }
 
 };
