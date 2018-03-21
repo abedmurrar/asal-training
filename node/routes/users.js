@@ -55,17 +55,22 @@ router.post('/', (req, res, next) => {
     User.addUser(req.body,
         data => {
             if (data) {
-                res.json(data)
+                console.log(data);
+                res.json({ success: true, msg: 'Registered successfully', id: data[0] })
             } else {
-                res.json(req.body)
+                res.status(HttpStatus.NOT_IMPLEMENTED).json(req.body)
             }
         },
         error => {
             if (error) {
-                if (error.code === 'ER_DUP_ENTRY') // check ER_DUP_ENTRY
-                { res.status(409) } else { res.status(400) }
-                res.json(error)
-            } else { res.json(req.body) }
+                console.log(error);
+                if (error.code === 'ER_DUP_ENTRY') {
+                    res.status(409).json({ success: false, msg: error.sqlMessage })
+                } else {
+                    error.success = false;
+                    res.status(HttpStatus.BAD_REQUEST).json(error)
+                }
+            } else { res.status(HttpStatus.BAD_GATEWAY).json({ success: false, msg: 'missing parameter' }) }
         }
     )
 })

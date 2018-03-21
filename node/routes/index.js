@@ -58,7 +58,7 @@ router.post('/login', (req, res, next) => {
     try {
         //check if session is not set
         if (!session.username) {
-            User.login(req.body.username,
+            User.getUserByUsername(req.body.username,
                 data => {
                     passwordEncoded = crypto
                         .createHash('sha256')
@@ -76,8 +76,9 @@ router.post('/login', (req, res, next) => {
                 },
                 error => {
                     if (error) {
+                        error.success = false;
                         res.status(HttpStatus.BAD_GATEWAY).json(error)
-                    } else { res.status(HttpStatus.BAD_GATEWAY).json(req.body) }
+                    } else { res.status(HttpStatus.BAD_GATEWAY).json({ success: false, msg: 'username can not be empty' }) }
                 })
         } else {
             res.redirect('forbidden')
