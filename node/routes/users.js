@@ -1,77 +1,56 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
+var debug = require('debug')('users-route')
+var HttpStatus = require('http-status-codes'); //http status codes package
+var session;
 
-var sess;
 router.get('/:id?', (req, res, next) => {
-    sess = req.session;
-    if (sess.username) {
-        if (req.params.id) {
-            User.getUserById(req.params.id,
-                data => {
-                    if (data) {
-                        res.json(data)
-                    } else {
-                        res.json(req.body)
-                    }
-                },
-                error => {
-                    if (error) {
-                        res.json(error)
-                        res.status(error.code)
-                    } else {
-                        res.json(req.body)
-                    }
-                }
-            )
-        } else {
-            User.getAllUsers(
-                data => {
-                    if (data) {
-                        res.json(data)
-                    } else {
-                        res.json(req.body)
-                    }
-                },
-                error => {
-                    if (error) {
-                        res.json(error)
-                    } else {
-                        res.json(req.body)
-                    }
-                }
-            )
-        }
-    } else {
-        res.render('forbidden');
-    }
-
-})
-router.post('/login', (req, res, next) => {
-    sess = req.session;
-    if (!sess.username) {
-        User.login(req.body,
+    debug('request parameters ' + req.params)
+    debug('session in request: ' + session)
+    session = req.session;
+    if (session.username && req.params.id && session.id == req.params.id) {
+        User.getUserById(req.params.id,
             data => {
-                if (Object.keys(data[0]).length) {
-                    sess.username = data[0].username;
-                    res.redirect('http://localhost:8080')
-                    res.status(200)
-                    res.end()
+                if (data) {
+                    res.json(data)
                 } else {
-                    res.redirect('http://localhost:8080')
-                    res.status(400)
-                    res.end()
+                    res.json(req.body)
                 }
             },
             error => {
                 if (error) {
-                    if (error.code === 'ER_DUP_ENTRY') // check ER_DUP_ENTRY
-                    { res.status(409) } else { res.status(400) }
                     res.json(error)
-                } else { res.json(req.body) }
-            })
-    } else { res.redirect('forbidden') }
+                    res.status(error.code)
+                } else {
+                    res.json(req.body)
+                }
+            }
+        )
+    } else if (session.username && session.role === 'admin') {
+        User.getAllUsers(
+            data => {
+                if (data) {
+                    res.json(data)
+                } else {
+                    res.json(req.body)
+                }
+            },
+            error => {
+                if (error) {
+                    res.json(error)
+                } else {
+                    res.json(req.body)
+                }
+            }
+        )
+    } else {
+        debug('an unlogged user attempted to get users/user')
+        res.status(HttpStatus.FORBIDDEN).render('forbidden');
+    }
+
 })
+
 router.post('/', (req, res, next) => {
     User.addUser(req.body,
         data => {
@@ -91,8 +70,8 @@ router.post('/', (req, res, next) => {
     )
 })
 router.delete('/:id', (req, res, next) => {
-    sess = req.session;
-    if (sess.username) {
+    session = req.session;
+    if (session.username) {
         User.deleteUser(req.params.id,
             data => {
                 if (data) {
@@ -114,26 +93,23 @@ router.delete('/:id', (req, res, next) => {
     }
 })
 router.put('/:id', (req, res, next) => {
-    sess = req.session;
-    if (sess.username) {
-        if (req.body.username && req.body.username === sess.username) {
-            User.updateUser(req.params.id, req.body,
-                data => {
-                    if (data) { res.json(data) } else { res.json(req.body) }
-                },
-                error => {
-                    if (error) {
-                        if (error.code === 'ER_DUP_ENTRY') { // check ER_DUP_ENTRY
-                            res.status(409)
-                        } else { res.status(400) }
-                        res.json(error)
-                    } else { res.json(req.body) }
-                })
-        } else {
-            res.render('forbidden');
-        }
+    session = req.session;
+    if (session.username && req.body.username && req.body.username === session.username) {
+        User.updateUser(req.params.id, req.body,
+            data => {
+                if (data) { res.json(data) } else { res.json(req.body) }
+            },
+            error => {
+                if (error) {
+                    if (error.code === 'ER_DUP_ENTRY') { // check ER_DUP_ENTRY
+                        res.status(409)
+                    } else { res.status(400) }
+                    res.json(error)
+                } else { res.json(req.body) }
+            })
     } else {
         res.render('forbidden');
     }
+
 })
 module.exports = router
