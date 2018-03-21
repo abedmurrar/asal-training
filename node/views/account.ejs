@@ -1,0 +1,23 @@
+<div class="account-form-container">
+    <form id="accountForm" class="account form" method="PUT" action="/users/<%= id %>">
+        <h2>Edit account</h2>
+        <label for="username">Username</label>
+        <div>
+            <input type="text" name="username" id="username" placeholder="Username" value="<%= username %>">
+            <p class="hint username-msg">Enter your username</p>
+        </div>
+        <label for="password">Password</label>
+        <div>
+            <input type="password" name="password" id="password" placeholder="Password">
+            <p class="hint password-msg">Enter your Password</p>
+        </div>
+        <label for="email">Email</label>
+        <div>
+            <input type="email" name="email" id="email" placeholder="Email" value="<%= email %>">
+            <p class="hint email-msg">Enter your email</p>
+        </div>
+        <input type="submit" id="edit" value="Edit">
+    </form>
+</div>
+<link rel="stylesheet" type="text/css" href="stylesheets/account.css">
+<script src="javascripts/account.js"></script>
