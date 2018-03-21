@@ -1,4 +1,21 @@
-:root {
+#loginForm {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    grid-gap: 5px;
+}
+
+label {
+    grid-column: 1 / 2;
+}
+
+input,
+button,
+p {
+    grid-column: 2/3;
+}
+
+
+/* :root {
     --primary-color: #852626;
     --primary-text-color: white;
     --border-color: #423c3c;
@@ -27,9 +44,10 @@
     padding: 10px;
     font-family: 'Vollkorn', serif;
     color: black;
-    background-color: white;
-}
+    background-color: white; 
 
+
+} 
 #loginForm main input:not([type^="button"]) {
     width: 100%;
     padding: 12px 20px;
@@ -38,12 +56,13 @@
     border: 3px solid #ccc;
     color: black;
     background: white;
-    /* -webkit-transition: 0.5s; */
-    /* transition: 0.5s; */
-    outline: none;
-}
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none; 
 
-#loginForm main input:not([type^="button"]):hover {
+
+}
+ #loginForm main input:not([type^="button"]):hover {
     border-bottom: 3px solid #555;
     transition: 0.5s;
 }
@@ -73,4 +92,4 @@
     transition: 0.2s;
     color: white;
     background: green;
-}
+} */

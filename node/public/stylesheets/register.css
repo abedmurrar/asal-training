@@ -1,4 +1,22 @@
 #registerForm {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 10px;
+}
+
+label {
+    grid-column: 1 / 2;
+    text-align: right;
+}
+
+input,
+button,
+p {
+    grid-column: 2/3;
+}
+
+
+/* #registerForm {
     border-radius: 15px;
     overflow: hidden;
     border: 3px solid #423c3c;
@@ -32,8 +50,65 @@
     border: 3px solid #ccc;
     color: black;
     background: white;
-    /* -webkit-transition: 0.5s; */
-    /* transition: 0.5s; */
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+}
+
+#registerForm main input:not([type^="button"]):hover {
+    border-bottom: 3px solid #555;
+    transition: 0.5s;
+}
+
+#registerForm main input:not([type^="button"]):focus {
+    border: 3px solid #555;
+    transition: 0.5s;
+}
+
+#registerForm main label {
+    font-weight: 600;
+    font-size: 120%;
+}
+
+#registerForm footer {
+    border-top: solid 3px #423c3c;
+    text-align: right;
+}#registerForm {
+    border-radius: 15px;
+    overflow: hidden;
+    border: 3px solid #423c3c;
+}
+
+#registerForm header,
+#registerForm footer {
+    padding: 5px 0 5px 0;
+    background-color: #852626;
+    border-color: #423c3c;
+}
+
+#registerForm header {
+    color: white;
+    border-bottom: solid 3px;
+    padding: 10px;
+}
+
+#registerForm main {
+    padding: 10px;
+    font-family: 'Vollkorn', serif;
+    color: black;
+    background-color: white;
+}
+
+#registerForm main input:not([type^="button"]) {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    color: black;
+    background: white;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
     outline: none;
 }
 
@@ -73,3 +148,20 @@
     color: white;
     background: green;
 }
+
+#registerForm footer input[type^="button"] {
+    padding: 10px;
+    outline: none;
+    margin: 5px 10px 5px 5px;
+    border: 1px solid;
+    border-radius: 10px;
+    color: black;
+    background: white;
+}
+
+#registerForm footer input[type^="button"]:hover {
+    background: #999;
+    transition: 0.2s;
+    color: white;
+    background: green;
+} */
