@@ -1,6 +1,7 @@
 var db = require('../dbconnection'); //reference of dbconnection.js
 var crypto = require('crypto'); //crypto package
 var HttpStatus = require('http-status-codes'); //http status codes package
+var debug = require('debug')('user-model')
 
 const usernameRegex = /^[a-z](([\w][\.\-]{0,1}){6,22})[a-z]$/;
 /*
@@ -29,6 +30,8 @@ const table = 'users'; //database table name
  * failure  -> Function to call if errors were caught
  */
 
+//admin password 0598243335admin
+
 var User = {
 
     getAllUsers: (success, failure) => {
@@ -41,6 +44,15 @@ var User = {
         return db(table)
             .select('*')
             .where('id', id)
+            .first()
+            .then(success)
+            .catch(failure);
+    },
+    getUserByUsername: (username, success, failure) => {
+        return db(table)
+            .select('*')
+            .where('username', username)
+            .first()
             .then(success)
             .catch(failure);
     },
@@ -65,7 +77,6 @@ var User = {
             }
             if (isValid) {
                 let passwordEncoded = crypto.createHash('sha256').update(password).digest('hex');
-                console.log(passwordEncoded);
                 return db(table)
                     .insert({ username: username, password: passwordEncoded, email: email })
                     .then(success)
@@ -135,28 +146,16 @@ var User = {
         }
 
     },
-    isExist: (User, success, failure) => {
-        return db(table)
-            .select('*')
-            .where('username', User.username)
-            .andWhere('email', User.email)
-            .andWhere('password', User.password)
-            .then(success)
-            .catch(failure);
-    },
-    login: (User, success, failure) => {
-        if (User.username && User.username.length && User.password && User.password.length) {
+    login: (username, success, failure) => {
+        if (username.length) {
             return db(table)
-                .select('username', 'password')
-                .where('username', User.username)
-                .andWhere('password', crypto
-                    .createHash('sha256')
-                    .update(User.password)
-                    .digest('hex'))
+                .select('*')
+                .where('username', username)
+                .first()
                 .then(success)
                 .catch(failure);
         } else {
-            failure({ error: HttpStatus.UNPROCESSABLE_ENTITY, failure: 'Invalid data format' });
+            failure({ success: false, error: HttpStatus.UNPROCESSABLE_ENTITY, message: 'Empty request' });
         }
     }
 
