@@ -1,46 +1,35 @@
-// $("#loginForm").on('submit', function() {
-//     console.log($(this));
-//     $(this).setAttribute('action', 'users/login');
-//     $(this).setAttribute('method', 'POST');
-//     var username = $("#l_username").val().trim();
-//     var password = $("#l_password").val().trim();
-//     var isValid = true;
-//     //check validity
-//     if (username.length > 0) {
-//         isValid = true;
-//     } else {
-//         isValid = false;
-//     }
-//     if (password.length > 0) {
-//         isValid = true;
-//     } else {
-//         isValid = false;
-//     }
-//     if (isValid) {
-//         $(this).submit();
-//     }
+const usernameRegex = /^[a-z](([\w][\.\-]{0,1}){6,22})[a-z]$/;
+// const emailRegex = /^[\w]([\w][\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/;
+const passwordRegex = /^.{7,}$/;
 
-// });
+
 
 // $("#loginForm").submit(event => {
 //     event.preventDefault();
-//     var username = $("#l_username").val().trim();
-//     var password = $("#l_password").val().trim();
-//     console.log(username);
-//     console.log(password);
+//     var username = $("#username").val().trim();
+//     var password = $("#password").val().trim();
 //     var isValid = true;
 //     //check validity
-//     if (username.length > 0) {
-//         isValid = true;
-//     } else {
+//     if (username == '' || !usernameRegex.test(username)) {
 //         isValid = false;
+//         $("#username").addClass('error');
 //     }
-//     if (password.length > 0) {
-//         isValid = true;
-//     } else {
+//     if (password == '' || !passwordRegex.test(password)) {
 //         isValid = false;
+//         $("#password").addClass('error');
 //     }
 //     if (isValid) {
-//         $(this).submit();
+//         $.ajax({
+
+//         })
+//     }
+// })
+
+// $("#login").hover(event => {
+
+//     if ($("#username").val().trim() == '' || $("#password").val().trim() == '') {
+//         $("#login").css('background', 'red')
+//     } else {
+//         $("#login").css('background', 'green')
 //     }
 // })
