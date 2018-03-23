@@ -4,7 +4,6 @@ var HttpStatus = require('http-status-codes'); //http status codes package
 const User = require('../models/User')
 var crypto = require('crypto') //crypto package
 var func = require('../func')
-const AJAX_CALL = 'XMLHttpRequest';
 
 var session;
 
@@ -67,8 +66,9 @@ router.post('/login', (req, res, next) => {
                     //check if password entered is same as stored
                     if (passwordEncoded == data.password) {
                         session.username = data.username;
+                        session.email = data.email;
                         session.role = data.role;
-                        session.id = data.id;
+                        session.uid = data.id;
                         res.status(HttpStatus.OK).json({ success: true, message: 'Successfully logged in.' })
                     } else {
                         res.status(HttpStatus.UNAUTHORIZED).json({ success: false, message: 'Wrong password, try again.' });
@@ -81,13 +81,12 @@ router.post('/login', (req, res, next) => {
                     } else { res.status(HttpStatus.BAD_GATEWAY).json({ success: false, msg: 'username can not be empty' }) }
                 })
         } else {
-            res.redirect('forbidden')
+            err = new Error('you\'re already logged in!!')
+            err.status = HttpStatus.NOT_IMPLEMENTED;
+            next(err);
         }
     } catch (error) {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).render('error', {
-            message: 'Internal error',
-            error: error
-        })
+        next(new ReferenceError('Our aliens are working on your error right now, don\'t miss an input'))
     }
 })
 
@@ -117,23 +116,85 @@ router.get('/register', (req, res) => {
 });
 
 /* GET account page */
-router.get('/account', (req, res) => {
+router.get('/account', (req, res, next) => {
     session = req.session;
     if (!func.isLogged(req)) {
-        res.render('error', {
-            error: 'Page not found 404',
-            message: 'The page you requested is not found.'
-        })
+        err = new Error('Page not found')
+        err.status = HttpStatus.NOT_FOUND;
+        next(err);
     } else {
         res.render('index', {
             logged: true,
             title: 'Home',
             page: 'account',
             username: session.username,
-            role: session.role
+            role: session.role,
+            id: session.uid,
+            email: session.email
         })
     }
 })
 
+/* GET manage page */
+router.get('/manage', (req, res, next) => {
+    session = req.session;
+    if (!func.isLogged(req)) {
+        err = new Error('Apparently, this page doesn\'t exist on out server');
+        err.status = HttpStatus.NOT_FOUND;
+        next(err);
+    } else if (session.role === 'admin') {
+        res.render('index', {
+            logged: true,
+            title: 'Manage',
+            page: 'admin/manage',
+            username: session.username,
+            role: session.role
+        })
+    } else {
+        err = new Error('Only admins please, not authorized')
+        err.status = HttpStatus.UNAUTHORIZED;
+        next(err);
+    }
+})
+
+router.get('/recover', (req, res, next) => {
+    session = req.session;
+    if (func.isLogged(req)) {
+        err = new Error('Only logged out users can recover their password.')
+        err.status(HttpStatus.NOT_ACCEPTABLE);
+        next(err);
+    } else {
+        res.render('index', {
+            logged: false,
+            title: 'Home',
+            page: 'recover'
+        })
+    }
+})
+
+// var nodemailer = require('nodemailer');
+
+// var transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'abedjmurrar@gmail.com',
+//     pass: '**'
+//   }
+// });
+
+// var mailOptions = {
+//   from: 'abrar@gmail.com',
+//   to: 'abedmurrar15@gmail.com',
+//   subject: 'Sending Email using Node.js',
+//   text: 'That was easy!'
+// };
+
+// transporter.sendMail(mailOptions, function(error, info){
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     console.log('Email sent: ' + info.response);
+//   }
+// });
 
 module.exports = router;
