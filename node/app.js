@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var helmet = require('helmet');
 var session = require('express-session');
+var func = require('./func');
 // var Tasks = require('./routes/Tasks');
 var app = express();
 //setting up domain for developlment
@@ -41,7 +42,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -69,12 +70,30 @@ app.use((req, res, next) => {
 if (app.get('env') === 'development') {
 
     app.use((err, req, res, next) => {
+        var page = 'error';
+        var title = 'Error';
         res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-        next(err);
+        if (err.status == 403) {
+            page = 'forbidden';
+            title = 'Forbidden';
+        }
+        if (func.isLogged(req)) {
+            res.render('index', {
+                title: title,
+                page: page,
+                logged: true,
+                role: req.session.role,
+                message: err.message
+            })
+        } else {
+            res.render('index', {
+                title: title,
+                page: page,
+                logged: false,
+                message: err.message
+            })
+        }
+
     });
 }
 
