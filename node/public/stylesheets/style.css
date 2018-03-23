@@ -5,9 +5,21 @@
     font-family: 'Comfortaa', cursive;
 }
 
-html,
+
+/* html,
 body {
     height: 100%;
+} */
+
+body {
+    background-image: url("topography.svg"), linear-gradient(110deg, #f93d66, #6d47d9);
+    background-size: 340px, auto;
+    background-attachment: fixed;
+    /* min-height: calc(100vh - 60px); */
+    margin: 20px;
+    /* background: white; */
+    background-position: fixed;
+    letter-spacing: -1px;
 }
 
 main {
@@ -43,7 +55,7 @@ nav.tabs a:hover {
 footer {
     display: flex;
     justify-content: center;
-    position: absolute;
+    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;

@@ -5,8 +5,13 @@
     padding: 30px;
     border: 2px solid black;
     background: white;
-    box-shadow: 10px 10px 0 0 black;
     border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.form:hover {
+    box-shadow: 10px 10px 0 0 black;
+    transform: translate3d(-5px, -5px, -5px);
 }
 
 .form label {
@@ -41,6 +46,14 @@
     justify-self: center;
     grid-column: auto / span 2;
     font-size: 20px;
+    border-radius: 15px;
+    box-shadow: 0 3px 0 0 black;
+}
+
+.form #login:focus,
+.form #login:active {
+    transform: translateY(5px);
+    box-shadow: none;
 }
 
 input,
