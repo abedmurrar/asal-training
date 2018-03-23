@@ -1,4 +1,4 @@
-var db = require('../dbconnection'); //reference of dbconnection.js
+var database = require('../dbconnection'); //reference of dbconnection.js
 var crypto = require('crypto'); //crypto package
 var HttpStatus = require('http-status-codes'); //http status codes package
 var debug = require('debug')('user-model')
@@ -21,28 +21,36 @@ const passwordRegex = /^.{7,}$/;
  * Password Regular Expression
  * a password must contain at least 7 characters
  */
-const table = 'users'; //database table name
-
-/*
- * id       -> Integer, id of the row (or user)
- * User     -> Object with attributes of (username,email,password)
- * success  -> Function to call if no errors were caught
- * failure  -> Function to call if errors were caught
- */
+const tables = { //database table name
+        users: 'users',
+        roles: 'user_role'
+    }
+    /*
+     * id       -> Integer, id of the row (or user)
+     * User     -> Object with attributes of (username,email,password)
+     * success  -> Function to call if no errors were caught
+     * failure  -> Function to call if errors were caught
+     */
 
 //admin password 0598243335admin
 
 var User = {
 
     getAllUsers: (success, failure) => {
-        return db(table)
-            .select('*')
+        return database(tables.users)
+            .join(tables.roles, function() {
+                this.on('u_role', '=', 'role_id')
+            })
+            .select('id', 'username', 'password', 'email', 'role')
             .then(success)
             .catch(failure);
     },
     getUserById: (id, success, failure) => {
-        return db(table)
-            .select('*')
+        return database(tables.users)
+            .select('id', 'username', 'password', 'email', 'role')
+            .join(tables.roles, function() {
+                this.on('u_role', '=', 'role_id')
+            })
             .where('id', id)
             .first()
             .then(success)
@@ -50,7 +58,10 @@ var User = {
     },
     getUserByUsername: (username, success, failure) => {
         if (username.length) {
-            return db(table)
+            return database(tables.users)
+                .join(tables.roles, function() {
+                    this.on('u_role', '=', 'role_id')
+                })
                 .select('*')
                 .where('username', username)
                 .first()
@@ -81,7 +92,7 @@ var User = {
             }
             if (isValid) {
                 let passwordEncoded = crypto.createHash('sha256').update(password).digest('hex');
-                return db(table)
+                return database(tables.users)
                     .insert({ username: username, password: passwordEncoded, email: email })
                     .then(success)
                     .catch(failure);
@@ -94,7 +105,7 @@ var User = {
         }
     },
     deleteUser: (id, success, failure) => {
-        return db(table)
+        return database(tables.users)
             .del()
             .where('id', id)
             .then(success)
@@ -133,7 +144,7 @@ var User = {
                 }
             }
             if (Object.keys(entries).length > 0) {
-                return db(table)
+                return database(tables.users)
                     .update(entries)
                     .where('id', id)
                     .then(success)
