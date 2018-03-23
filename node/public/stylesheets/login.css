@@ -1,4 +1,4 @@
-#loginForm {
+.form {
     display: grid;
     grid-template-columns: 80px 220px;
     grid-gap: 20px;
@@ -9,22 +9,21 @@
     border-radius: 20px;
 }
 
-#loginForm label {
+.form label {
     margin-top: 12px;
     grid-column: 1 / 2;
     /* align-self: right; */
     text-align: center;
 }
 
-#loginForm div #username,
-#loginForm div #password {
+.form div input:not([type^="button"]):not([type^="submit"]) {
     background: #caffc6;
     border-radius: 20px;
 }
 
-#loginForm div #username,
-#loginForm div #password,
-#loginForm #login {
+.form div #username,
+.form div #password,
+.form #login {
     width: 100%;
     padding: 10px;
     outline: none;
@@ -32,12 +31,12 @@
     transition: all 0.1s ease-in;
 }
 
-#loginForm div #username:hover,
-#loginForm div #password:hover {
+.form div #username:hover,
+.form div #password:hover {
     transform: scale(1.1);
 }
 
-#loginForm #login {
+.form #login {
     width: 50% !important;
     justify-self: center;
     grid-column: auto / span 2;
