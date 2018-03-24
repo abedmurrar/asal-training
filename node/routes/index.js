@@ -14,13 +14,13 @@ router.get('/', (req, res) => {
         res.render('index', {
             title: 'Home',
             logged: false,
-            page: 'login'
+            page: 'home'
         });
     } else {
         res.render('index', {
             title: 'Home',
             logged: true,
-            page: 'home',
+            page: 'user/home',
             username: session.username,
             role: session.role
         });
@@ -44,7 +44,7 @@ router.get('/login', (req, res) => {
         res.render('index', {
             logged: true,
             title: 'Home',
-            page: 'home',
+            page: 'user/home',
             username: session.username,
             role: session.role
         })
@@ -59,26 +59,31 @@ router.post('/login', (req, res, next) => {
         if (!session.username) {
             User.getUserByUsername(req.body.username,
                 data => {
-                    passwordEncoded = crypto
-                        .createHash('sha256')
-                        .update(req.body.password)
-                        .digest('hex');
-                    //check if password entered is same as stored
-                    if (passwordEncoded == data.password) {
-                        session.username = data.username;
-                        session.email = data.email;
-                        session.role = data.role;
-                        session.uid = data.id;
-                        res.status(HttpStatus.OK).json({ success: true, message: 'Successfully logged in.' })
+                    if (typeof data != 'undefined') {
+                        passwordEncoded = crypto
+                            .createHash('sha256')
+                            .update(req.body.password)
+                            .digest('hex');
+                        //check if password entered is same as stored
+                        if (passwordEncoded == data.password) {
+                            session.username = data.username;
+                            session.email = data.email;
+                            session.role = data.role;
+                            session.uid = data.id;
+                            res.status(HttpStatus.OK).json({ success: true, message: 'Successfully logged in.' })
+                        } else {
+                            res.status(HttpStatus.UNAUTHORIZED).json({ success: false, message: 'Wrong password, try again.', password: 'Wrong password' });
+                        }
                     } else {
-                        res.status(HttpStatus.UNAUTHORIZED).json({ success: false, message: 'Wrong password, try again.' });
+                        res.status(HttpStatus.UNAUTHORIZED).json({ success: false, message: 'username does not exist', username: 'username does not exist' })
                     }
                 },
                 error => {
+                    console.log(error);
                     if (error) {
                         error.success = false;
                         res.status(HttpStatus.BAD_GATEWAY).json(error)
-                    } else { res.status(HttpStatus.BAD_GATEWAY).json({ success: false, msg: 'username can not be empty' }) }
+                    } else { res.status(HttpStatus.BAD_GATEWAY).json({ success: false, message: 'username can not be empty', username: 'username can not be empty' }) }
                 })
         } else {
             err = new Error('you\'re already logged in!!')
@@ -108,7 +113,7 @@ router.get('/register', (req, res) => {
         res.render('index', {
             logged: true,
             title: 'Home',
-            page: 'home',
+            page: 'user/home',
             username: session.username,
             role: session.role
         })

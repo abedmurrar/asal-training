@@ -6,8 +6,6 @@ var HttpStatus = require('http-status-codes'); //http status codes package
 var session;
 
 router.get('/:id?', (req, res, next) => {
-    debug('request parameters ' + req.params)
-    debug('session in request: ' + session)
     session = req.session;
     if (session.username && req.params.id && session.id == req.params.id) {
         User.getUserById(req.params.id,
@@ -55,22 +53,23 @@ router.post('/', (req, res, next) => {
     User.addUser(req.body,
         data => {
             if (data) {
-                console.log(data);
-                res.json({ success: true, msg: 'Registered successfully', id: data[0] })
+                res.json({ success: true, message: 'Registered successfully', id: data[0] })
             } else {
                 res.status(HttpStatus.NOT_IMPLEMENTED).json(req.body)
             }
         },
         error => {
             if (error) {
-                console.log(error);
                 if (error.code === 'ER_DUP_ENTRY') {
-                    res.status(409).json({ success: false, msg: error.sqlMessage })
+                    if (error.sqlMessage.includes('username'))
+                        res.status(409).json({ success: false, message: error.sqlMessage, username: 'Username already exists' })
+                    else if (error.sqlMessage.includes('email'))
+                        res.status(409).json({ success: false, message: error.sqlMessage, email: 'Email already registered' })
                 } else {
                     error.success = false;
                     res.status(HttpStatus.BAD_REQUEST).json(error)
                 }
-            } else { res.status(HttpStatus.BAD_GATEWAY).json({ success: false, msg: 'missing parameter' }) }
+            } else { res.status(HttpStatus.BAD_GATEWAY).json({ success: false, message: 'missing parameter' }) }
         }
     )
 })
