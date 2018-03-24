@@ -3,21 +3,21 @@
         <h2>Edit account</h2>
         <label for="username">Username</label>
         <div>
-            <input type="text" name="username" id="username" placeholder="Username" value="<%= username %>">
+            <input type="text" name="username" id="username" placeholder="Username" class="field" value="<%= username %>">
             <p class="hint username-msg">Enter your username</p>
         </div>
         <label for="password">Password</label>
         <div>
-            <input type="password" name="password" id="password" placeholder="Password">
+            <input type="password" name="password" id="password" class="field" placeholder="Password">
             <p class="hint password-msg">Enter your Password</p>
         </div>
         <label for="email">Email</label>
         <div>
-            <input type="email" name="email" id="email" placeholder="Email" value="<%= email %>">
+            <input type="email" name="email" id="email" placeholder="Email" class="field" value="<%= email %>">
             <p class="hint email-msg">Enter your email</p>
         </div>
-        <input type="submit" id="edit" value="Edit">
+        <input type="submit" id="edit" value="Edit" class="btn">
     </form>
 </div>
-<link rel="stylesheet" type="text/css" href="stylesheets/account.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/form.css">
 <script src="javascripts/account.js"></script>
