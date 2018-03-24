@@ -1,6 +1,7 @@
 .form {
     display: grid;
-    grid-template-columns: 80px 220px;
+    /* grid-template-columns: 80px 220px; */
+    grid-template-columns: repeat(auto-fit);
     grid-gap: 20px;
     padding: 30px;
     border: 2px solid black;
@@ -14,21 +15,7 @@
     transform: translate3d(-5px, -5px, -5px);
 }
 
-.form label {
-    margin-top: 12px;
-    grid-column: 1 / 2;
-    /* align-self: right; */
-    text-align: center;
-}
-
-.form div input:not([type^="button"]):not([type^="submit"]) {
-    background: #caffc6;
-    border-radius: 20px;
-}
-
-.form div #username,
-.form div #password,
-.form #login {
+.form input {
     width: 100%;
     padding: 10px;
     outline: none;
@@ -36,12 +23,31 @@
     transition: all 0.1s ease-in;
 }
 
-.form div #username:hover,
-.form div #password:hover {
+.form label {
+    margin-top: 12px;
+    grid-column: 1 / 2;
+    font-weight: 600;
+    /* align-self: right; */
+    text-align: center;
+}
+
+.form div .field {
+    box-shadow: 0 0 5px black;
+    border-radius: 20px;
+}
+
+.form div .field:hover {
     transform: scale(1.1);
 }
 
-.form #login {
+.form div .field:focus {
+    border-bottom-color: blue;
+    transition: 1s ease;
+    transform: initial;
+    /* transform: scale(1.1); */
+}
+
+.form .btn {
     width: 50% !important;
     justify-self: center;
     grid-column: auto / span 2;
@@ -50,32 +56,44 @@
     box-shadow: 0 3px 0 0 black;
 }
 
-.form #login:focus,
-.form #login:active {
+.form .btn:focus,
+.form .btn:active {
     transform: translateY(5px);
     box-shadow: none;
 }
 
-input,
+
+/* input,
 button,
 p {
     grid-column: 2/3;
+} */
+
+.form h2 {
+    grid-column: auto / span 2;
 }
 
-.hint {
+.form .hint {
     opacity: 0.4;
     font-size: 10px;
     margin: 5px;
 }
 
-.error {
-    background: #fdc6c6 url(../img/error.png) no-repeat 98% center;
-    box-shadow: 0 0 5px #FF5252;
+.form .form-msg {
+    grid-column: span 2;
+}
+
+.error,
+.error:-webkit-autofill {
+    background-color: #FDC6c6 !important;
+    background: #fdc6c6 url(../img/error.png) no-repeat 98% center !important;
+    box-shadow: 0 0 5px #FF5252 !important;
     border-bottom: solid 2px red !important;
     -webkit-text-fill-color: red !important;
 }
 
-.correct {
+.correct,
+.correct:-webkit-autofill {
     background: #caffc6 url(../img/correct.png) no-repeat 98% center !important;
     box-shadow: 0 0 5px rgb(97, 255, 82) !important;
     border-color: rgb(50, 255, 23) !important;
