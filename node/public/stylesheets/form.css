@@ -10,6 +10,10 @@
     transition: all 0.2s;
 }
 
+.form>p {
+    grid-column: span 2;
+}
+
 .form:hover {
     box-shadow: 10px 10px 0 0 black;
     transform: translate3d(-5px, -5px, -5px);
