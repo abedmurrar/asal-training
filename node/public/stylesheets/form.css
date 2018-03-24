@@ -28,12 +28,14 @@
     grid-column: 1 / 2;
     font-weight: 600;
     /* align-self: right; */
-    text-align: center;
+    text-align: right;
 }
 
 .form div .field {
     box-shadow: 0 0 5px black;
     border-radius: 20px;
+    background-color: white;
+    color: black;
 }
 
 .form div .field:hover {
@@ -50,6 +52,8 @@
 .form .btn {
     width: 50% !important;
     justify-self: center;
+    background-color: rgb(221, 221, 221);
+    color: black;
     grid-column: auto / span 2;
     font-size: 20px;
     border-radius: 15px;
@@ -92,9 +96,19 @@ p {
     -webkit-text-fill-color: red !important;
 }
 
+.error-hint {
+    opacity: 1.0 !important;
+    color: red;
+}
+
 .correct,
 .correct:-webkit-autofill {
     background: #caffc6 url(../img/correct.png) no-repeat 98% center !important;
     box-shadow: 0 0 5px rgb(97, 255, 82) !important;
     border-color: rgb(50, 255, 23) !important;
+}
+
+.correct-hint {
+    opacity: 1.0 !important;
+    color: green;
 }
