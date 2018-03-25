@@ -2,6 +2,8 @@ var database = require('../dbconnection'); //reference of dbconnection.js
 var crypto = require('crypto'); //crypto package
 var HttpStatus = require('http-status-codes'); //http status codes package
 var debug = require('debug')('user-model')
+var uuidv1 = require('uuid/v1');
+var moment = require('moment');
 
 const usernameRegex = /^[a-z](([\w][\.\-]{0,1}){6,22})[a-z]$/;
 /*
@@ -22,15 +24,19 @@ const passwordRegex = /^.{7,}$/;
  * a password must contain at least 7 characters
  */
 const tables = { //database table name
-        users: 'users',
-        roles: 'user_role'
-    }
-    /*
-     * id       -> Integer, id of the row (or user)
-     * User     -> Object with attributes of (username,email,password)
-     * success  -> Function to call if no errors were caught
-     * failure  -> Function to call if errors were caught
-     */
+    users: 'users',
+    roles: 'user_role',
+    resets: 'resets'
+}
+
+const format = 'YYYY-MM-DD HH:mm:ss';
+
+/*
+ * id       -> Integer, id of the row (or user)
+ * User     -> Object with attributes of (username,email,password)
+ * success  -> Function to call if no errors were caught
+ * failure  -> Function to call if errors were caught
+ */
 
 //admin password 0598243335admin
 
@@ -68,7 +74,22 @@ var User = {
                 .then(success)
                 .catch(failure);
         } else {
-            failure({ msg: 'Empty request' });
+            failure({ message: 'Empty request' });
+        }
+    },
+    getUserByEmail: (email, success, failure) => {
+        if (email.length) {
+            return database(tables.users)
+                .join(tables.roles, function() {
+                    this.on('u_role', '=', 'role_id')
+                })
+                .select('*')
+                .where('email', email)
+                .first()
+                .then(success)
+                .catch(failure);
+        } else {
+            failure({ message: 'Empty request' });
         }
     },
     addUser: (User, success, failure) => {
@@ -162,6 +183,47 @@ var User = {
             .where('id', id)
             .then(success)
             .catch(failure);
+    },
+    generateToken: (email, success, failure) => {
+        var id;
+        getUserByEmail(email, data => {
+                if (Object.keys(data).length > 0) {
+                    id = data.id;
+                }
+            },
+            error => {
+                console.log(error);
+            })
+        return database(tables.resets)
+            .insert({ token: uuidv1(), user_id: id })
+            .then(success)
+            .catch(failure);
+    },
+    getToken: (token, success, failure) => {
+        return database(tables.resets)
+            .select('*')
+            .where('token', token)
+            .andWhereBetween('request_time', [moment().subtract(1, 'days').format(format), moment().format(format)])
+            .first()
+            .then(success)
+            .catch(failure);
+    },
+    getTokenByEmail: (email, success, failure) => {
+        if (email.length) {
+            return database(tables.users)
+                .join(tables.roles, function() {
+                    this.on('u_role', '=', 'role_id')
+                }).join(tables.resets, function() {
+                    this.on('id', '=', 'user_id')
+                }).select('*')
+                .where('email', email)
+                .andWhereBetween('request_time', [moment().subtract(1, 'days').format(format), moment().format(format)])
+                .first()
+                .then(success)
+                .catch(failure);
+        } else {
+            failure({ message: 'Empty request' });
+        }
     }
 
 };
