@@ -3,6 +3,8 @@ var router = express.Router();
 var HttpStatus = require('http-status-codes'); //http status codes package
 const User = require('../models/User')
 var crypto = require('crypto') //crypto package
+var nodemailer = require('nodemailer');
+var uuidv1 = require('uuid/v1');
 var func = require('../func')
 
 var session;
@@ -186,29 +188,47 @@ router.get('/recover', (req, res, next) => {
     }
 })
 
-// var nodemailer = require('nodemailer');
+router.get('/recover/:token', (req, res, next) => {
 
-// var transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: 'abedjmurrar@gmail.com',
-//     pass: '**'
-//   }
-// });
+})
 
-// var mailOptions = {
-//   from: 'abrar@gmail.com',
-//   to: 'abedmurrar15@gmail.com',
-//   subject: 'Sending Email using Node.js',
-//   text: 'That was easy!'
-// };
+router.post('/recover', (req, res, next) => {
 
-// transporter.sendMail(mailOptions, function(error, info){
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log('Email sent: ' + info.response);
-//   }
-// });
+    User.generateToken(req.body.email,
+        data => {
+            if (data.length > 0) {
+                var token = User.getTokenByEmail('req.body.email')
+                var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'asaltechmailer@gmail.com',
+                        pass: '0598243335admin'
+                    }
+                });
+
+                var mailOptions = {
+                    from: 'asaltechmailer@gmail.com',
+                    to: 'abedmurrar15@gmail.com',
+                    subject: 'Password reset for asaltech Abed Al Rahman Murrar Task',
+                    text: '<p>You\'ve received this email because of a password reset request' +
+                        ', if you didn\'t make this request you can ignore it, otherwise, ' +
+                        'you have 24 hours before your <a href="http://localhost:8080/recover/' + data.token + '">reset link</a> is invalid</p>'
+                };
+
+                transporter.sendMail(mailOptions, function(error, info) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            }
+        },
+        error => {
+
+        })
+
+})
+
 
 module.exports = router;
