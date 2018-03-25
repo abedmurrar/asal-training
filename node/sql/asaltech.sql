@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `asaltech`
 --
-CREATE DATABASE IF NOT EXISTS `asaltech` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+CREATE DATABASE IF NOT EXISTS `asaltech` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `asaltech`;
 
 -- --------------------------------------------------------
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `user_role` (
   `role_id` int(11) NOT NULL AUTO_INCREMENT,
   `role` varchar(15) NOT NULL,
   PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `user_role`
@@ -81,6 +81,23 @@ INSERT INTO `user_role` (`role`) VALUES
 ALTER TABLE `users`
   ADD CONSTRAINT `role_cons` FOREIGN KEY (`u_role`) REFERENCES `user_role` (`role_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resets`
+--
+DROP TABLE IF EXISTS `resets`;
+CREATE TABLE IF NOT EXISTS `resets` ( 
+`reset_id` int(11) NOT NULL AUTO_INCREMENT,
+`token` varchar(255) NOT NULL,
+`user_id` int(11) NOT NULL,
+`request_time` datetime NOT NULL,
+PRIMARY KEY (`reset_id`),
+UNIQUE KEY `token` (`token`),
+KEY `fk_user` (`user_id`),
+CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) 
+REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
