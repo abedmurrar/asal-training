@@ -1,7 +1,7 @@
 .form {
     display: grid;
-    /* grid-template-columns: 80px 220px; */
-    grid-template-columns: repeat(auto-fit);
+    grid-template-columns: 80px 220px;
+    /* grid-template-columns: repeat(auto-fit); */
     grid-gap: 20px;
     padding: 30px;
     border: 2px solid black;
@@ -11,6 +11,7 @@
 }
 
 .form>p {
+    word-wrap: break-word;
     grid-column: span 2;
 }
 
