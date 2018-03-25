@@ -114,7 +114,7 @@ var User = {
     updateUser: (id, User, success, failure) => {
         try {
             var errors = {};
-            var entries = {};
+            var entries = { last_modified: new Date() };
             if (User.username) {
                 let username = User.username.trim().toLowerCase();
                 if (!username.length || !usernameRegex.test(username)) {
@@ -155,6 +155,13 @@ var User = {
             failure({ code: HttpStatus.INTERNAL_SERVER_ERROR, message: "Invalid data format!" });
         }
 
+    },
+    logUser: (id, success, failure) => {
+        return database(tables.users)
+            .update({ last_logged: new Date() })
+            .where('id', id)
+            .then(success)
+            .catch(failure);
     }
 
 };

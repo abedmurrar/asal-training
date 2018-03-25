@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 15, 2018 at 12:21 AM
+-- Generation Time: Mar 25, 2018 at 07:28 AM
 -- Server version: 5.7.21-0ubuntu0.17.10.1
 -- PHP Version: 7.0.25-0ubuntu0.16.04.1
 
@@ -34,11 +34,52 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(45) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(64) NOT NULL,
+  `u_role` int(11) DEFAULT '2',
+  `last_modified` datetime DEFAULT NULL,
+  `last_logged` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `email` (`email`),
+  KEY `role_cons` (`u_role`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `u_role`, `last_modified`, `last_logged`) VALUES
+(1, 'site.admin', 'abedmurrar15@gmail.com', '00316c1ef229e1d28ee8956bfab1029731d2b26e03110b58986d1f8e04eeefca', 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_role`
+--
+
+DROP TABLE IF EXISTS `user_role`;
+CREATE TABLE IF NOT EXISTS `user_role` (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role` varchar(15) NOT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user_role`
+--
+
+INSERT INTO `user_role` (`role`) VALUES
+('admin'),
+('client');
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `role_cons` FOREIGN KEY (`u_role`) REFERENCES `user_role` (`role_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

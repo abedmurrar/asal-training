@@ -71,6 +71,13 @@ router.post('/login', (req, res, next) => {
                             session.role = data.role;
                             session.uid = data.id;
                             session.pass = req.body.password;
+                            User.logUser(data.id,
+                                data => {
+                                    console.log(data);
+                                },
+                                error => {
+                                    console.log(error);
+                                })
                             res.status(HttpStatus.OK).json({ success: true, message: 'Successfully logged in.' })
                         } else {
                             res.status(HttpStatus.UNAUTHORIZED).json({ success: false, message: 'Wrong password, try again.', password: 'Wrong password' });
