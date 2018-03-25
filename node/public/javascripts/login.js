@@ -4,11 +4,11 @@ const passwordRegex = /^.{7,}$/;
 
 $("#username").on('keydown', function() {
     $(this).removeClass('error').removeClass('correct');
-    $(".username-msg").html("Enter your username").removeClass('error-hint');
+    $(".username-msg").html("Enter your username").removeClass('error-hint').removeClass('correct-hint');
 })
 $("#password").on('keydown', function() {
     $(this).removeClass('error').removeClass('correct');
-    $(".password-msg").html('Enter your password').removeClass('error-hint');
+    $(".password-msg").html('Enter your password').removeClass('error-hint').removeClass('correct-hint');
 })
 
 
@@ -48,14 +48,14 @@ function response(data) {
     if (!data.success) {
         if (data.username) {
             $("#username").addClass('error');
-            $(".username-msg").html(data.username).addClass('error-hint');
+            $(".username-msg").html(data.username).addClass('error-hint').removeClass('correct-hint');
         } else {
             $("#username").addClass('correct');
-            $(".username-msg").html('Correct username').addClass('correct-hint');
+            $(".username-msg").html('Correct username').addClass('correct-hint').removeClass('error-hint');
         }
         if (data.password) {
             $("#password").addClass('error');
-            $(".password-msg").html(data.password).addClass('error-hint');
+            $(".password-msg").html(data.password).addClass('error-hint').removeClass('correct-hint');
         }
     }
 }

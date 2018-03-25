@@ -1,23 +1,65 @@
-$.ajax({
-    url: '/users/',
-    method: 'get',
-    success: data => {
-        data.forEach(element => {
-            $("tbody").append(row(element));
-        });
-    },
-    error: data => {
-        response(JSON.parse(data.responseText));
-    }
-})
+function getUsers() {
+    $.ajax({
+        url: '/users/',
+        method: 'get',
+        success: data => {
+            $('tbody').html('');
+            data.forEach(element => {
+                $('tbody').append(row(element));
+            });
+        },
+        error: data => {
+            response(JSON.parse(data.responseText));
+        }
+    })
+}
 
 function row(user) {
-    return "<tr>" +
-        "<td>" + user.id + "</td>" +
-        "<td>" + user.username + "</td>" +
-        "<td>" + user.email + "</td>" +
-        "<td>" + user.role + "</td>" +
-        "<td><button class=\"edit\" user=\"" + user.id + "\">Edit</button><button class=\"delete\" user=\"" + user.id + "\">Delete</button></td>" +
-
-        "</tr>";
+    return '<tr>' +
+        '<td id="id" user="' + user.id + '">' +
+        user.id +
+        '</td>' +
+        '<td id="username" user="' + user.id + '">' +
+        user.username +
+        '</td>' +
+        '<td id="email" user="' + user.id + '">' +
+        user.email +
+        '</td>' +
+        '<td id="role" user="' + user.id + '">' +
+        user.role +
+        '</td>' +
+        '<td>' +
+        '<button class="delete" id="delete" user="' + user.id + '">Delete</button></td>' +
+        '</tr>';
 }
+getUsers();
+
+$(document).on('click', '.delete', event => {
+    var btn = event.currentTarget;
+    var id = $(btn).attr('user');
+    var username = $("#username[user^='" + id + "']").html();
+    console.log(username);
+    $.confirm({
+        title: 'Confirm deletion',
+        content: 'Are you sure you want to delete <strong>' + username + '</strong> ?',
+        buttons: {
+            Yes: function() {
+                $.ajax({
+                    url: '/users/' + id,
+                    method: 'delete',
+                    success: data => {
+                        $.alert('Deleted!');
+                        getUsers();
+                    },
+                    error: data => {
+                        $.alert('an Error occured while deleting!');
+                        getUsers();
+                    }
+                })
+            },
+            No: function() {},
+
+        }
+    });
+
+})

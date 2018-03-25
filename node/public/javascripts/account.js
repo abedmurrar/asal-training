@@ -15,8 +15,35 @@ $("#email").on('keydown', function() {
     $(".email-msg").html('Enter your Email').removeClass('error-hint').removeClass('correct-hint');
 })
 
+$("#delete").on('click', event => {
+    var id = $("#id").val();
+    console.log(id);
+    var method = 'DELETE';
+    $.confirm({
+        title: 'Confirm deletion',
+        content: 'Are you sure you want to delete your account ?',
+        buttons: {
+            Yes: function() {
+                $.ajax({
+                    url: '/users/' + id,
+                    method: method,
+                    success: data => {
+                        $.alert('Deleted!');
+                        method = 'GET';
+                        document.location.assign('/');
+                    },
+                    error: data => {
+                        console.log(data);
+                        $.alert('an Error occured while deleting!');
+                    }
+                })
+            },
+            No: function() {},
+        }
+    });
+})
 
-$("#registerForm").on("submit", event => {
+$("#accountForm").on("submit", event => {
     event.preventDefault();
     var username = $("#username").val().trim();
     var password = $("#password").val().trim();
@@ -43,10 +70,12 @@ $("#registerForm").on("submit", event => {
         $.ajax({
             url: '/users/',
             method: 'post',
-            data: $("#registerForm").serialize(),
+            data: $("#accountForm").serialize(),
             success: data => {
-                $("#registerForm")[0].reset();
-                $("#msg").html(data.message + ', <a href="/login">login</a> now').addClass('correct-hint');
+                $.dialog({
+                    title: 'Updated!',
+                    content: 'Edited Successfully!',
+                });
             },
             error: data => {
                 response(JSON.parse(data.responseText));
