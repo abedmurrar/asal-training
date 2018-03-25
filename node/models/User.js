@@ -152,7 +152,7 @@ var User = {
             }
             failure(errors);
         } catch (error) {
-            failure({ code: HttpStatus.INTERNAL_SERVER_ERROR, failure: "Invalid data format!" });
+            failure({ code: HttpStatus.INTERNAL_SERVER_ERROR, message: "Invalid data format!" });
         }
 
     }
