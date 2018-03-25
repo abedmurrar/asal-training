@@ -7,7 +7,7 @@ var session;
 
 router.get('/:id?', (req, res, next) => {
     session = req.session;
-    if (session.username && req.params.id && session.id == req.params.id) {
+    if (session.username && req.params.id && (session.id == req.params.id || session.role === 'admin')) {
         User.getUserById(req.params.id,
             data => {
                 if (data) {
@@ -21,7 +21,7 @@ router.get('/:id?', (req, res, next) => {
                     res.json(error)
                     res.status(error.code)
                 } else {
-                    res.json(req.body)
+                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(req.body)
                 }
             }
         )
@@ -38,13 +38,13 @@ router.get('/:id?', (req, res, next) => {
                 if (error) {
                     res.json(error)
                 } else {
-                    res.json(req.body)
+                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(req.body)
                 }
             }
         )
     } else {
         debug('an unlogged user attempted to get users/user')
-        res.status(HttpStatus.FORBIDDEN).render('forbidden');
+        res.status(HttpStatus.FORBIDDEN).json({ success: false, message: 'forbidden' });
     }
 
 })
@@ -75,25 +75,28 @@ router.post('/', (req, res, next) => {
 })
 router.delete('/:id', (req, res, next) => {
     session = req.session;
-    if (session.username) {
+    if (session.username && (session.uid == req.params.id || session.role === 'admin')) {
         User.deleteUser(req.params.id,
             data => {
                 if (data) {
-                    res.json(data)
+                    if (session.uid == req.params.id) {
+                        req.session.destroy();
+                    }
+                    res.status(HttpStatus.OK).json(data)
+
                 } else {
-                    res.json(req.body)
+                    res.status(HttpStatus.OK).json(req.body)
                 }
             },
             error => {
                 if (error) {
-                    res.status(404)
-                    res.json(error)
+                    res.status(HttpStatus.NOT_FOUND).json(error)
                 } else {
-                    res.json(req.body)
+                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(req.body)
                 }
             })
     } else {
-        res.render('forbidden');
+        res.status(HttpStatus.FORBIDDEN).json({ success: false, message: 'forbidden' });
     }
 })
 router.put('/:id', (req, res, next) => {
@@ -101,18 +104,30 @@ router.put('/:id', (req, res, next) => {
     if (session.username && req.body.username && req.body.username === session.username) {
         User.updateUser(req.params.id, req.body,
             data => {
-                if (data) { res.json(data) } else { res.json(req.body) }
+                if (data) {
+                    var user = JSON.parse(data);
+                    session.username = user.username;
+                    session.uid = user.id;
+                    session.email = user.email;
+                    session.role = user.role;
+                    res.json(data)
+                } else { res.json(req.body) }
             },
             error => {
                 if (error) {
-                    if (error.code === 'ER_DUP_ENTRY') { // check ER_DUP_ENTRY
-                        res.status(409)
-                    } else { res.status(400) }
-                    res.json(error)
-                } else { res.json(req.body) }
+                    if (error.code === 'ER_DUP_ENTRY') {
+                        if (error.sqlMessage.includes('username'))
+                            res.status(409).json({ success: false, message: error.sqlMessage, username: 'Username already exists' })
+                        else if (error.sqlMessage.includes('email'))
+                            res.status(409).json({ success: false, message: error.sqlMessage, email: 'Email already registered' })
+                    } else {
+                        error.success = false;
+                        res.status(400).json(error);
+                    }
+                } else { res.status(HttpStatus.METHOD_NOT_ALLOWED).json({ success: false, message: 'Not allowed' }) }
             })
     } else {
-        res.render('forbidden');
+        res.status(HttpStatus.FORBIDDEN).json({ success: false, message: 'forbidden' });
     }
 
 })

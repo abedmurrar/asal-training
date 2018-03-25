@@ -70,6 +70,7 @@ router.post('/login', (req, res, next) => {
                             session.email = data.email;
                             session.role = data.role;
                             session.uid = data.id;
+                            session.pass = req.body.password;
                             res.status(HttpStatus.OK).json({ success: true, message: 'Successfully logged in.' })
                         } else {
                             res.status(HttpStatus.UNAUTHORIZED).json({ success: false, message: 'Wrong password, try again.', password: 'Wrong password' });
@@ -135,7 +136,8 @@ router.get('/account', (req, res, next) => {
             username: session.username,
             role: session.role,
             id: session.uid,
-            email: session.email
+            email: session.email,
+            password: session.pass
         })
     }
 })
@@ -166,7 +168,7 @@ router.get('/recover', (req, res, next) => {
     session = req.session;
     if (func.isLogged(req)) {
         err = new Error('Only logged out users can recover their password.')
-        err.status(HttpStatus.NOT_ACCEPTABLE);
+        err.status = HttpStatus.NOT_ACCEPTABLE;
         next(err);
     } else {
         res.render('index', {
