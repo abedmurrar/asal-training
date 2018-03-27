@@ -97,14 +97,19 @@ router.delete('/:id', (req, res, next) => {
 })
 router.put('/:id', (req, res, next) => {
   session = req.session
-  if (session.username && req.body.username && req.body.username === session.username) {
+  if (session.role && ((session.role === 'reset' && session.resetUid && session.resetUid === req.params.id) ||
+        (session.username && req.body.username && req.body.username === session.username))) {
     User.updateUser(req.params.id, req.body,
       data => {
         if (data) {
-          var user = JSON.parse(data)
-          session.username = user.username
-          session.pass = user.password
-          session.email = user.email
+          if (session.role !== 'reset') {
+            var user = JSON.parse(data)
+            session.username = user.username
+            session.pass = user.password
+            session.email = user.email
+          } else {
+            session.destroy()
+          }
           res.json(data)
         } else { res.json(req.body) }
       },

@@ -4,14 +4,14 @@ var HttpStatus = require('http-status-codes') // http status codes package
 var uuidv1 = require('uuid/v1')
 var moment = require('moment')
 
-const usernameRegex = /^[a-z](([\w][\.\-]{0,1}){6,22})[a-z]$/
+const usernameRegex = /^[a-z](([\w][.-]{0,1}){6,22})[a-z]$/
 /*
 * Username Regular Expression
 * a username must start and end with an alphabet
 * a username at least 7 characters and at most 24 characters of alphabets and digits
 * can contain [.] dot but not repeatedly, [-] dash but not repeatedly, and [_] underscore
 */
-const emailRegex = /^[\w]([\w][\.\-]{0,1}?)+\@([a-z0-9][_\.\-]{0,1}?)+\.([a-z]{2,5})$/
+const emailRegex = /^[\w]([\w][.-]{0,1}?)+@([a-z0-9][_.-]{0,1}?)+\.([a-z]{2,5})$/
 /*
 * Email Regular Expression
 * an email is validated with respect to some of the RFC 5322 Syntax
@@ -181,9 +181,9 @@ var User = {
       .then(success)
       .catch(failure)
   },
-  generateToken: (email, success, failure) => {
-    var id
-    this.getUserByEmail(email, data => {
+  generateToken: (email, uuid, success, failure) => {
+    var id = 0 // no user has id of 0
+    User.getUserByEmail(email, data => {
       if (Object.keys(data).length > 0) {
         id = data.id
       }
@@ -192,7 +192,7 @@ var User = {
       console.log(error)
     })
     return database(tables.resets)
-      .insert({ token: uuidv1(), user_id: id })
+      .insert({ token: uuid, user_id: id })
       .then(success)
       .catch(failure)
   },

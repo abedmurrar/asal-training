@@ -72,6 +72,7 @@ router.post('/login', (req, res, next) => {
               session.role = data.role
               session.uid = data.id
               session.pass = req.body.password
+              req.session.cookie.expires = false
               User.logUser(
                 data.id,
                 data => {
@@ -195,29 +196,37 @@ router.get('/manage', (req, res, next) => {
   }
 })
 
-router.get('/recover', (req, res, next) => {
+/* GET recover page */
+router.get('/recover/:token?/:id?', (req, res, next) => {
   session = req.session
   if (func.isLogged(req)) {
-    var err = new Error('Only logged out users can recover their password.')
+    var err = new Error('Only logged out users can recover their password, you can <a href="/account">change</a> it.')
     err.status = HttpStatus.NOT_ACCEPTABLE
     next(err)
   } else {
-    res.render('index', {
-      logged: false,
-      title: 'Home',
-      page: 'recover'
-    })
+    if (req.params.token && req.params.id && session.role === 'reset') {
+      res.render('index', {
+        logged: false,
+        title: 'Reset Password',
+        page: 'reset',
+        uid: req.params.id
+      })
+    } else {
+      res.render('index', {
+        logged: false,
+        title: 'Home',
+        page: 'recover'
+      })
+    }
   }
 })
 
-router.get('/recover/:token', (req, res, next) => {})
-
-router.post('/recover', (req, res, next) => {
-  User.generateToken(
-    req.body.email,
+router.post('/recover/', (req, res, next) => {
+  var session = req.session
+  var token = uuidv1()
+  User.generateToken(req.body.email, token,
     data => {
       if (data.length > 0) {
-        var token = User.getTokenByEmail('req.body.email')
         var transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
@@ -232,8 +241,7 @@ router.post('/recover', (req, res, next) => {
           subject: 'Password reset for asaltech Abed Al Rahman Murrar Task',
           text: "<p>You've received this email because of a password reset request" +
       ", if you didn't make this request you can ignore it, otherwise, " +
-      'you have 24 hours before your <a href="http://localhost:8080/recover/' +
-      data.token +
+      'you have 24 hours before your <a href="http://localhost:8080/recover/' + token + '/' + data[0] +
       '">reset link</a> is invalid</p>'
         }
 
@@ -244,6 +252,12 @@ router.post('/recover', (req, res, next) => {
             console.log('Email sent: ' + info.response)
           }
         })
+
+        session.role = 'reset'
+        session.resetUid = data[0]
+        var day = 86400000 // seconds
+        session.cookie.expires = new Date(Date.now() + day)
+        session.cookie.maxAge = day
       }
     },
     error => {}
