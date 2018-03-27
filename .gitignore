@@ -1,5 +1,6 @@
-node/node_modules/
+node_modules
 *.log
 .idea
 .vscode
 .eslintrc.js
+package-lock.json
