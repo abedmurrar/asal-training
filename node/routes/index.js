@@ -66,7 +66,7 @@ router.post('/login', (req, res, next) => {
               .update(req.body.password)
               .digest('hex')
             // check if password entered is same as stored
-            if (passwordEncoded == data.password) {
+            if (passwordEncoded === data.password) {
               session.username = data.username
               session.email = data.email
               session.role = data.role
@@ -100,7 +100,6 @@ router.post('/login', (req, res, next) => {
           }
         },
         error => {
-          console.log(error)
           if (error) {
             error.success = false
             res.status(HttpStatus.BAD_GATEWAY).json(error)

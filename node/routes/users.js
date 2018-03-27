@@ -26,6 +26,7 @@ router.get('/:id?', (req, res, next) => {
       }
     )
   } else if (session.username && session.role === 'admin') {
+    console.log(session.role)
     User.getAllUsers(
       data => {
         if (data) {
@@ -102,9 +103,8 @@ router.put('/:id', (req, res, next) => {
         if (data) {
           var user = JSON.parse(data)
           session.username = user.username
-          session.uid = user.id
+          session.pass = user.password
           session.email = user.email
-          session.role = user.role
           res.json(data)
         } else { res.json(req.body) }
       },

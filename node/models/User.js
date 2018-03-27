@@ -43,8 +43,8 @@ var User = {
 
   getAllUsers: (success, failure) => {
     return database(tables.users)
-      .join(tables.roles, () => {
-        this.on('u_role', '=', 'role_id')
+      .join(tables.roles, (query) => {
+        query.on('u_role', '=', 'role_id')
       })
       .select('id', 'username', 'password', 'email', 'role')
       .then(success)
@@ -53,8 +53,8 @@ var User = {
   getUserById: (id, success, failure) => {
     return database(tables.users)
       .select('id', 'username', 'password', 'email', 'role')
-      .join(tables.roles, () => {
-        this.on('u_role', '=', 'role_id')
+      .join(tables.roles, (query) => {
+        query.on('u_role', '=', 'role_id')
       })
       .where('id', id)
       .first()
@@ -64,8 +64,8 @@ var User = {
   getUserByUsername: (username, success, failure) => {
     if (username.length) {
       return database(tables.users)
-        .join(tables.roles, () => {
-          this.on('u_role', '=', 'role_id')
+        .join(tables.roles, (query) => {
+          query.on('u_role', '=', 'role_id')
         })
         .select('*')
         .where('username', username)
@@ -79,8 +79,8 @@ var User = {
   getUserByEmail: (email, success, failure) => {
     if (email.length) {
       return database(tables.users)
-        .join(tables.roles, () => {
-          this.on('u_role', '=', 'role_id')
+        .join(tables.roles, (query) => {
+          query.on('u_role', '=', 'role_id')
         })
         .select('*')
         .where('email', email)
@@ -208,13 +208,22 @@ var User = {
   getTokenByEmail: (email, success, failure) => {
     if (email.length) {
       return database(tables.users)
-        .join(tables.roles, () => {
-          this.on('u_role', '=', 'role_id')
-        }).join(tables.resets, () => {
-          this.on('id', '=', 'user_id')
-        }).select('*')
+        .join(tables.roles, (query) => {
+          query.on('u_role', '=', 'role_id')
+        })
+        .join(tables.resets, (query) => {
+          query.on('id', '=', 'user_id')
+        })
+        .select('*')
         .where('email', email)
-        .andWhereBetween('request_time', [moment().subtract(1, 'days').format(format), moment().format(format)])
+        .andWhereBetween('request_time',
+          [
+            moment()
+              .subtract(1, 'days')
+              .format(format),
+            moment()
+              .format(format)
+          ])
         .first()
         .then(success)
         .catch(failure)
