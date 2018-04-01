@@ -3,8 +3,6 @@ var router = express.Router()
 var HttpStatus = require('http-status-codes') // http status codes package
 const User = require('../models/User')
 var crypto = require('crypto') // crypto package
-var nodemailer = require('nodemailer')
-var uuidv1 = require('uuid/v1')
 var func = require('../func')
 
 var session
@@ -16,7 +14,7 @@ router.get('/', (req, res) => {
     res.render('index', {
       title: 'Home',
       logged: false,
-      page: 'home'
+      page: 'guest/home'
     })
   } else {
     res.render('index', {
@@ -38,7 +36,7 @@ router.get('/login', (req, res) => {
     res.render('index', {
       logged: false,
       title: 'Login',
-      page: 'login'
+      page: 'guest/login'
     })
   } else {
     res.render('index', {
@@ -139,7 +137,7 @@ router.get('/register', (req, res) => {
     res.render('index', {
       logged: false,
       title: 'Register',
-      page: 'register'
+      page: 'guest/register'
     })
   } else {
     res.render('index', {
@@ -163,7 +161,7 @@ router.get('/account', (req, res, next) => {
     res.render('index', {
       logged: true,
       title: 'Home',
-      page: 'account',
+      page: 'user/account',
       username: session.username,
       role: session.role,
       id: session.uid,
@@ -197,71 +195,28 @@ router.get('/manage', (req, res, next) => {
 })
 
 /* GET recover page */
-router.get('/recover/:token?/:id?', (req, res, next) => {
+router.get('/recover/:token?', (req, res, next) => {
   session = req.session
   if (func.isLogged(req)) {
-    var err = new Error('Only logged out users can recover their password, you can <a href="/account">change</a> it.')
+    var err = new Error('Only logged out users can recover their password, you can change your password in account page.')
     err.status = HttpStatus.NOT_ACCEPTABLE
     next(err)
   } else {
-    if (req.params.token && req.params.id && session.role === 'reset') {
+    if (req.params.token) { // more security here
       res.render('index', {
         logged: false,
         title: 'Reset Password',
-        page: 'reset',
-        uid: req.params.id
+        page: 'user/reset',
+        token: req.params.token
       })
     } else {
       res.render('index', {
         logged: false,
         title: 'Home',
-        page: 'recover'
+        page: 'user/recover'
       })
     }
   }
-})
-
-router.post('/recover/', (req, res, next) => {
-  var session = req.session
-  var token = uuidv1()
-  User.generateToken(req.body.email, token,
-    data => {
-      if (data.length > 0) {
-        var transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-            user: 'asaltechmailer@gmail.com',
-            pass: '0598243335admin'
-          }
-        })
-
-        var mailOptions = {
-          from: 'asaltechmailer@gmail.com',
-          to: 'abedmurrar15@gmail.com',
-          subject: 'Password reset for asaltech Abed Al Rahman Murrar Task',
-          text: "<p>You've received this email because of a password reset request" +
-      ", if you didn't make this request you can ignore it, otherwise, " +
-      'you have 24 hours before your <a href="http://localhost:8080/recover/' + token + '/' + data[0] +
-      '">reset link</a> is invalid</p>'
-        }
-
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.log(error)
-          } else {
-            console.log('Email sent: ' + info.response)
-          }
-        })
-
-        session.role = 'reset'
-        session.resetUid = data[0]
-        var day = 86400000 // seconds
-        session.cookie.expires = new Date(Date.now() + day)
-        session.cookie.maxAge = day
-      }
-    },
-    error => {}
-  )
 })
 
 module.exports = router
