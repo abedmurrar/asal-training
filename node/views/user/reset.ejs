@@ -2,9 +2,9 @@
     <form id="resetForm" class="reset form" method="PUT" action="/reset">
         <h2>reset password</h2>
         <p id="msg"></p>
-        <label for="password">Email</label>
+        <label for="password">Password</label>
         <div>
-            <input type="hidden" name="id" id="id" value="<%= uid %>">
+            <input type="hidden" name="token" id="token" value="<%= token %>">
             <input type="text" name="password" id="password" placeholder="Password" class="field" required>
             <p class="hint password-msg">Enter your new password</p>
         </div>
@@ -16,5 +16,5 @@
         <input type="submit" id="reset" value="Reset" class="btn">
     </form>
 </div>
-<link rel="stylesheet" type="text/css" href="stylesheets/form.css">
-<script src="javascripts/reset.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/form.css">
+<script src="/javascripts/reset.min.js"></script>
