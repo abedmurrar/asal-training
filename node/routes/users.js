@@ -1,11 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
-var debug = require('debug')('users-route')
 var HttpStatus = require('http-status-codes') // http status codes package
 var session
 
-router.get('/:id?', (req, res, next) => {
+router.get('/:id?', (req, res) => {
   session = req.session
   if (session.username && req.params.id && (session.id === req.params.id || session.role === 'admin')) {
     User.getUserById(req.params.id,
@@ -25,7 +24,6 @@ router.get('/:id?', (req, res, next) => {
       }
     )
   } else if (session.username && session.role === 'admin') {
-    console.log(session.role)
     User.getAllUsers(
       data => {
         if (data) {
@@ -47,7 +45,7 @@ router.get('/:id?', (req, res, next) => {
   }
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
   User.addUser(req.body,
     data => {
       if (data.length > 0) {
@@ -68,7 +66,7 @@ router.post('/', (req, res, next) => {
     }
   )
 })
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', (req, res) => {
   session = req.session
   if (session.username && (session.uid === req.params.id || session.role === 'admin')) {
     User.deleteUser(req.params.id,
@@ -93,18 +91,17 @@ router.delete('/:id', (req, res, next) => {
     res.status(HttpStatus.FORBIDDEN).json({ success: false, message: 'forbidden' })
   }
 })
-router.put('/:id', (req, res, next) => {
+router.put('/:id', (req, res) => {
   session = req.session
   if (session.username && req.body.username && req.body.username === session.username) {
     User.updateUser(req.params.id, req.body,
       data => {
         if (data) {
-          var user = JSON.parse(data)
-          session.username = user.username
-          session.pass = user.password
-          session.email = user.email
-          res.json(data)
-        } else { res.json(req.body) }
+          session.username = (req.body.username && req.body.username.length > 0) ? req.body.username : session.username
+          session.pass = (req.body.password && req.body.password.length > 0) ? req.body.password : session.pass
+          session.email = (req.body.email && req.body.email.length > 0) ? req.body.email : session.email
+          res.status(HttpStatus.OK).json({ success: true, message: 'User modified', status: data })
+        } else { res.status(HttpStatus.NOT_MODIFIED).json(req.body) }
       },
       error => {
         if (error) {

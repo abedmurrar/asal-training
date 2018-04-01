@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 var HttpStatus = require('http-status-codes') // http status codes package
 const User = require('../models/User')
+const Reset = require('../models/Reset')
 var crypto = require('crypto') // crypto package
 var func = require('../func')
 
@@ -53,7 +54,7 @@ router.get('/login', (req, res) => {
 router.post('/login', (req, res, next) => {
   session = req.session
   try {
-  // check if session is not set
+    // check if session is not set
     if (!session.username) {
       User.getUserByUsername(
         req.body.username,
@@ -202,13 +203,34 @@ router.get('/recover/:token?', (req, res, next) => {
     err.status = HttpStatus.NOT_ACCEPTABLE
     next(err)
   } else {
-    if (req.params.token) { // more security here
-      res.render('index', {
-        logged: false,
-        title: 'Reset Password',
-        page: 'user/reset',
-        token: req.params.token
-      })
+    if (req.params.token) {
+      Reset.getUserByToken(req.params.token,
+        data => {
+          if (Object.keys(data).length) {
+            res.render('index', {
+              logged: false,
+              title: 'Reset Password',
+              page: 'user/reset',
+              token: req.params.token
+            })
+          } else {
+            res.render('index', {
+              logged: false,
+              title: 'Home',
+              page: 'user/recover',
+              msg: 'An Error occured while retreiving your request'
+            })
+          }
+        },
+        () => {
+          res.render('index', {
+            logged: false,
+            title: 'Home',
+            page: 'user/recover',
+            msg: 'Request does not exist'
+          })
+        })
+
     } else {
       res.render('index', {
         logged: false,
@@ -216,6 +238,25 @@ router.get('/recover/:token?', (req, res, next) => {
         page: 'user/recover'
       })
     }
+  }
+})
+
+router.get('/about',(req,res)=>{
+  session = req.session
+  if (!func.isLogged(req)) {
+    res.render('index', {
+      title: 'About',
+      logged: false,
+      page: 'about'
+    })
+  } else {
+    res.render('index', {
+      title: 'About',
+      logged: true,
+      page: 'about',
+      username: session.username,
+      role: session.role
+    })
   }
 })
 

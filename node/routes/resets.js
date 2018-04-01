@@ -1,18 +1,17 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
-const func = require('../func')
 const Reset = require('../models/Reset')
 const debug = require('debug')('reset-api')
 var nodemailer = require('nodemailer')
 var uuidv1 = require('uuid/v1')
 var HttpStatus = require('http-status-codes') // http status codes package
 
-router.put('/:token', (req, res, next) => {
+router.put('/:token', (req, res) => {
   Reset.getUserByToken(req.params.token,
     data => {
       if (Object.keys(data).length > 0) {
-        var id = req.body.id
+        var id = data.id
         var password = req.body.password
         var confirm = req.body.confirmPassword
         User.changePassword(id, password, confirm,
@@ -43,7 +42,7 @@ router.put('/:token', (req, res, next) => {
     })
 })
 // here you send your email to generate a token
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
   var token = uuidv1()
   try {
     Reset.generateToken(req.body.email, token,
@@ -61,10 +60,9 @@ router.post('/', (req, res, next) => {
             from: 'asaltechmailer@gmail.com',
             to: req.body.email,
             subject: 'Password reset for asaltech Abed Al Rahman Murrar Task',
-            text: "<p>You've received this email because of a password reset request" +
+            html: "<p>You've received this email because of a password reset request" +
               ", if you didn't make this request you can ignore it, otherwise, " +
-              'you have 24 hours before your request is invalid. If you don\'t remember making this request ignore this email</p>',
-            html: '<a href="http://localhost:8080/recover/' + token + '">Reset now</a> '
+              'you have 24 hours before your request is invalid. If you don\'t remember making this request ignore this email.</p> <a href="http://localhost:8080/recover/' + token + '">Reset now</a> '
           }
 
           transporter.sendMail(mailOptions, (error, info) => {
