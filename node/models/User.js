@@ -1,8 +1,7 @@
 var database = require('../dbconnection') // reference of dbconnection.js
 var crypto = require('crypto') // crypto package
-var HttpStatus = require('http-status-codes') // http status codes package
-var uuidv1 = require('uuid/v1')
 var moment = require('moment')
+const format = 'YYYY-MM-DD HH:mm:ss'
 
 const usernameRegex = /^[a-z](([\w][.-]{0,1}){6,22})[a-z]$/
 /*
@@ -24,12 +23,8 @@ const passwordRegex = /^.{7,}$/
 */
 const tables = { // database table name
   users: 'users',
-  roles: 'user_role',
-  resets: 'resets'
+  roles: 'user_role'
 }
-
-const format = 'YYYY-MM-DD HH:mm:ss'
-
 /*
  * id       -> Integer, id of the row (or user)
  * User     -> Object with attributes of (username,email,password)
@@ -133,7 +128,7 @@ var User = {
   updateUser: (id, User, success, failure) => {
     try {
       var errors = {}
-      var entries = { last_modified: new Date() }
+      var entries = {}
       if (User.username) {
         let username = User.username.trim().toLowerCase()
         if (!username.length || !usernameRegex.test(username)) {
@@ -168,68 +163,26 @@ var User = {
           .where('id', id)
           .then(success)
           .catch(failure)
+      } else {
+        failure(errors)
       }
-      failure(errors)
     } catch (error) {
-      failure({ code: HttpStatus.INTERNAL_SERVER_ERROR, message: 'Invalid data format!' })
+      failure({ message: 'Invalid data format!' })
+    }
+  },
+  changePassword: (id, password, confirm, success, failure) => {
+    if (password && confirm && password === confirm) {
+      return User.updateUser(id, {password: password}, success, failure)
+    } else {
+      failure({message: 'Invalid password'})
     }
   },
   logUser: (id, success, failure) => {
     return database(tables.users)
-      .update({ last_logged: new Date() })
+      .update({ last_logged: moment().format(format) })
       .where('id', id)
       .then(success)
       .catch(failure)
-  },
-  generateToken: (email, uuid, success, failure) => {
-    var id = 0 // no user has id of 0
-    User.getUserByEmail(email, data => {
-      if (Object.keys(data).length > 0) {
-        id = data.id
-      }
-    },
-    error => {
-      console.log(error)
-    })
-    return database(tables.resets)
-      .insert({ token: uuid, user_id: id })
-      .then(success)
-      .catch(failure)
-  },
-  getToken: (token, success, failure) => {
-    return database(tables.resets)
-      .select('*')
-      .where('token', token)
-      .andWhereBetween('request_time', [moment().subtract(1, 'days').format(format), moment().format(format)])
-      .first()
-      .then(success)
-      .catch(failure)
-  },
-  getTokenByEmail: (email, success, failure) => {
-    if (email.length) {
-      return database(tables.users)
-        .join(tables.roles, (query) => {
-          query.on('u_role', '=', 'role_id')
-        })
-        .join(tables.resets, (query) => {
-          query.on('id', '=', 'user_id')
-        })
-        .select('*')
-        .where('email', email)
-        .andWhereBetween('request_time',
-          [
-            moment()
-              .subtract(1, 'days')
-              .format(format),
-            moment()
-              .format(format)
-          ])
-        .first()
-        .then(success)
-        .catch(failure)
-    } else {
-      failure({ message: 'Empty request' })
-    }
   }
 }
 module.exports = User
