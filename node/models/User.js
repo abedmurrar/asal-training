@@ -172,9 +172,9 @@ var User = {
   },
   changePassword: (id, password, confirm, success, failure) => {
     if (password && confirm && password === confirm) {
-      return User.updateUser(id, {password: password}, success, failure)
+      return User.updateUser(id, { password: password }, success, failure)
     } else {
-      failure({message: 'Invalid password'})
+      failure({ message: 'Invalid password' })
     }
   },
   logUser: (id, success, failure) => {

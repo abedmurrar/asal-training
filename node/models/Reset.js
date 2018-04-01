@@ -21,12 +21,11 @@ var Reset = {
           .insert({ token: uuid, user_id: id })
           .then(success)
           .catch(failure)
-        // console.log(id)
       }
     },
-    error => {
-      console.log(error)
-    })
+      error => {
+        console.log(error)
+      })
   },
   getUserByToken: (token, success, failure) => {
     return database(tables.resets)
