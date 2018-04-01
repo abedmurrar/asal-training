@@ -1,16 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 4.6.6deb5
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Generation Time: Mar 25, 2018 at 07:28 AM
--- Server version: 5.7.21-0ubuntu0.17.10.1
--- PHP Version: 7.0.25-0ubuntu0.16.04.1
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
 
 --
 -- Database: `asaltech`
@@ -32,7 +19,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(64) NOT NULL,
   `u_role` int(11) DEFAULT '2',
   `last_modified` datetime DEFAULT NULL,
-  `last_logged` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `last_logged` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
@@ -68,10 +56,6 @@ INSERT INTO `user_role` (`role`) VALUES
 ('client');
 
 --
--- Constraints for dumped tables
---
-
---
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
@@ -87,13 +71,14 @@ CREATE TABLE IF NOT EXISTS `resets` (
 `reset_id` int(11) NOT NULL AUTO_INCREMENT,
 `token` varchar(255) NOT NULL,
 `user_id` int(11) NOT NULL,
-`request_time` datetime NOT NULL,
+`request_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 PRIMARY KEY (`reset_id`),
 UNIQUE KEY `token` (`token`),
-KEY `fk_user` (`user_id`),
-CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) 
-REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION 
+KEY `fk_user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--
+-- Constraints for table `resets`
+--
+ALTER TABLE `resets`
+  ADD CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
