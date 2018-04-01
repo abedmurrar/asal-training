@@ -7,6 +7,7 @@ var bodyParser = require('body-parser')
 var cors = require('cors')
 var routes = require('./routes/index')
 var users = require('./routes/users')
+var resets = require('./routes/resets')
 var helmet = require('helmet')
 var session = require('express-session')
 var func = require('./func')
@@ -47,10 +48,12 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use('/public', express.static('public'))
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', routes)
 app.use('/users', users)
+app.use('/resets', resets)
 // app.use('/Tasks', Tasks);
 
 // catch 404 and forward to error handler
@@ -68,11 +71,11 @@ app.use((req, res, next) => {
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use((err, req, res, next) => {
-    var page = 'error'
+    var page = 'handle/error'
     var title = 'Error'
     res.status(err.status || 500)
     if (err.status === 403) {
-      page = 'forbidden'
+      page = 'handle/forbidden'
       title = 'Forbidden'
     }
     if (func.isLogged(req)) {
