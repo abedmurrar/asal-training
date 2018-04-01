@@ -3,21 +3,21 @@ const passwordRegex = /^.{7,}$/
 
 $('#username').on('keydown', function () {
   $(this)
-  .removeClass('error')
-  .removeClass('correct')
+    .removeClass('error')
+    .removeClass('correct')
   $('.username-msg')
-  .html('Enter your username')
-  .removeClass('error-hint')
-  .removeClass('correct-hint')
+    .html('Enter your username')
+    .removeClass('error-hint')
+    .removeClass('correct-hint')
 })
 $('#password').on('keydown', function () {
   $(this)
-  .removeClass('error')
-  .removeClass('correct')
+    .removeClass('error')
+    .removeClass('correct')
   $('.password-msg')
-  .html('Enter your password')
-  .removeClass('error-hint')
-  .removeClass('correct-hint')
+    .html('Enter your password')
+    .removeClass('error-hint')
+    .removeClass('correct-hint')
 })
 
 $('#loginForm').on('submit', event => {
@@ -30,15 +30,15 @@ $('#loginForm').on('submit', event => {
     isValid = false
     $('#username').addClass('error')
     $('.username-msg')
-    .html('Invalid username')
-    .addClass('error-hint')
+      .html('Invalid username')
+      .addClass('error-hint')
   }
   if (password === '' || !passwordRegex.test(password)) {
     isValid = false
     $('#password').addClass('error')
     $('.password-msg')
-    .html('Invalid Password')
-    .addClass('error-hint')
+      .html('Invalid Password')
+      .addClass('error-hint')
   }
   if (isValid) {
     $.ajax({
@@ -46,7 +46,7 @@ $('#loginForm').on('submit', event => {
       method: 'post',
       // data: ,
       data: { username: username, password: password },
-      success: data => {
+      success: () => {
         window.location.replace('/')
       },
       error: data => {
@@ -56,7 +56,7 @@ $('#loginForm').on('submit', event => {
   }
 })
 
-function response (data) {
+function response(data) {
   if (!data.success) {
     if (data.username) {
       $('#username').addClass('error')

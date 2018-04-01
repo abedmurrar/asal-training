@@ -27,7 +27,7 @@ $('#recoverForm').on('submit', event => {
       url: '/resets/',
       method: 'POST',
       data: $('#recoverForm').serialize(),
-      success: data => {
+      success: () => {
         $('#recoverForm')[0].reset()
         $('#msg').html('Request is sent, if your email exists you will receive an email to reset your password')
       }

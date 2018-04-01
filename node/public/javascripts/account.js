@@ -30,7 +30,7 @@ $('#email').on('keydown', function () {
     .removeClass('correct-hint')
 })
 
-$('#delete').on('click', event => {
+$('#delete').on('click', () => {
   var id = $('#id').val()
   var method = 'DELETE'
   $.confirm({
@@ -41,17 +41,17 @@ $('#delete').on('click', event => {
         $.ajax({
           url: '/users/' + id,
           method: method,
-          success: data => {
+          success: () => {
             $.alert('Deleted!')
             method = 'GET'
             document.location.assign('/')
           },
-          error: data => {
+          error: () => {
             $.alert('an Error occured while deleting!')
           }
         })
       },
-      No: function () {}
+      No: function () { }
     }
   })
 })
@@ -93,7 +93,7 @@ $('#accountForm').on('submit', event => {
       url: '/users/' + id,
       method: 'PUT',
       data: $('#accountForm').serialize(),
-      success: data => {
+      success: () => {
         $.dialog({
           title: 'Updated!',
           content: 'Edited Successfully!'
@@ -106,7 +106,7 @@ $('#accountForm').on('submit', event => {
   }
 })
 
-function response (data) {
+function response(data) {
   if (!data.success) {
     if (data.username) {
       $('#username')

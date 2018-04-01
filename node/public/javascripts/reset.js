@@ -26,7 +26,7 @@ $('#resetForm').on('submit', event => {
   var password = $('#password').val().trim()
   var isValid = true
   // check validity
-  if (confirmPassword === '' || !confirmPassword.test(confirmPassword)) {
+  if (confirmPassword === '' || !passwordRegex.test(confirmPassword)) {
     isValid = false
     $('#confirmPassword').addClass('error')
     $('.confirmPassword-msg')
@@ -51,11 +51,11 @@ $('#resetForm').on('submit', event => {
       url: '/resets/' + $('#token').val(),
       method: 'PUT',
       data: $('#resetForm').serialize(),
-      success: data => {
-        // window.location.replace('/')
+      success: () => {
+        $('#msg').html('Reset Successfully').addClass('correct-hint')
       },
-      error: data => {
-        // response(JSON.parse(data.responseText))
+      error: () => {
+        $('#msg').html('Reset Failed').addClass('correct-hint')
       }
     })
   }

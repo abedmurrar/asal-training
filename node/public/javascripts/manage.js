@@ -1,4 +1,4 @@
-function getUsers () {
+function getUsers() {
   $.ajax({
     url: '/users/',
     method: 'GET',
@@ -11,23 +11,23 @@ function getUsers () {
   })
 }
 
-function row (user) {
+function row(user) {
   return '<tr>' +
-        '<td id="id" user="' + user.id + '">' +
-        user.id +
-        '</td>' +
-        '<td id="username" user="' + user.id + '">' +
-        user.username +
-        '</td>' +
-        '<td id="email" user="' + user.id + '">' +
-        user.email +
-        '</td>' +
-        '<td id="role" user="' + user.id + '">' +
-        user.role +
-        '</td>' +
-        '<td>' +
-        '<button class="delete" id="delete" user="' + user.id + '">Delete</button></td>' +
-        '</tr>'
+    '<td id="id" user="' + user.id + '">' +
+    user.id +
+    '</td>' +
+    '<td id="username" user="' + user.id + '">' +
+    user.username +
+    '</td>' +
+    '<td id="email" user="' + user.id + '">' +
+    user.email +
+    '</td>' +
+    '<td id="role" user="' + user.id + '">' +
+    user.role +
+    '</td>' +
+    '<td>' +
+    '<button class="delete" id="delete" user="' + user.id + '">Delete</button></td>' +
+    '</tr>'
 }
 getUsers()
 
@@ -43,17 +43,17 @@ $(document).on('click', '.delete', event => {
         $.ajax({
           url: '/users/' + id,
           method: 'delete',
-          success: data => {
+          success: () => {
             $.alert('Deleted!')
             getUsers()
           },
-          error: data => {
+          error: () => {
             $.alert('an Error occured while deleting!')
             getUsers()
           }
         })
       },
-      No: function () {}
+      No: function () { }
 
     }
   })

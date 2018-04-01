@@ -74,7 +74,7 @@ $('#registerForm').on('submit', event => {
   }
 })
 
-function response (data) {
+function response(data) {
   if (!data.success) {
     if (data.username) {
       $('#username')
