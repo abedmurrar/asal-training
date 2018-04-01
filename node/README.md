@@ -30,21 +30,25 @@
 * For monitoring server use __pm2__ package, for more info check [pm2 Website](http://pm2.keymetrics.io/)
 
 ------------------
-## Server characteristics ##
+## Web Application ##
 * Server is a single page application 
 * Server works on port **8080**
 * server can edit, delete, insert and get users
 * You can use any REST client to test the server
+* Admin can delete any user
+* Any new registered user is considered a client, not an admin
 * Passwords are encrypted into SHA-256
 
-### User Operations
+### API
 |HTTP method| Link | Action |
 |:-----:|:-----:|:-----:|
-| GET | `localhost:8080/users` | Get all users|
+| GET | `localhost:8080/users` | Get all users (admin only)|
 | GET | `localhost:8080/users/[id]` | Get user by id
 | POST | `localhost:8080/users` | Insert new user, check [examples](#markdown-header-examples)
-| PUT | `localhost:8080/users/[id]` | Edit user, check [examples](#markdown-header-examples) |
-| DELETE | `localhost:8080/users/[id]` | Delete user from database
+| POST | `localhost:8080/resets` | Create reset password request
+| PUT | `localhost:8080/users/[id]` | Edit user, check [examples](#markdown-header-examples) (logged in user)|
+| PUT | `localhost:8080/resets/[token]` | Reset password (change)
+| DELETE | `localhost:8080/users/[id]` | Delete user from database (logged in user/admin)
 
 ---------
 ## User Characteristics ##
@@ -83,6 +87,15 @@ __POST__ is used to insert a new user into database. POST can be acheived using 
     "email": "john.doe@example.com"
 }
 ```
+__POST__ is also used to generate a reset password request to be sent to email, it is accomplished with the required fields:
+* email
+```json
+{
+    "email":"myemail@example.com"
+}
+```
+If the email exists, a message will be sent to the email.
+
 --------
 ### PUT ###
 PUT is used to edit a user's attribute which is one of the following :
@@ -105,3 +118,12 @@ To change the username and password :
 }
 ```
 All fields can be edited at once too.
+
+__PUT__ is also used with reset requests, after the user goes to the link sent to his/her email and changes his/her password with the required fields:
+```json
+{
+    "password":"newPassWord",
+    "confirmPassword":"newPassWord"
+}
+```
+in addition of the token in the url.
