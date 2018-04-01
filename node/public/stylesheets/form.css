@@ -10,9 +10,10 @@
     transition: all 0.2s;
 }
 
-.form>p {
+.form>p, .form>a {
     word-wrap: break-word;
     grid-column: span 2;
+    text-align: center;
 }
 
 .form:hover {

@@ -63,7 +63,7 @@ nav.tabs a:hover {
     padding-bottom: 20px;
 }
 
-.content~footer {
+/* .content~footer {
     display: flex;
     justify-content: center;
     position: fixed;
@@ -76,4 +76,4 @@ nav.tabs a:hover {
     background-color: orange;
     border-top: 1px solid black;
     z-index: -1;
-}
+} */
