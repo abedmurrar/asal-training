@@ -24,7 +24,7 @@ $('#recoverForm').on('submit', event => {
   }
   if (isValid) {
     $.ajax({
-      url: '/recover',
+      url: '/resets/',
       method: 'POST',
       data: $('#recoverForm').serialize(),
       success: data => {

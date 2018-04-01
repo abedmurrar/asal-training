@@ -48,10 +48,9 @@ $('#resetForm').on('submit', event => {
   }
   if (isValid) {
     $.ajax({
-      url: '/login',
-      method: 'post',
-      // data: ,
-      data: { password: password },
+      url: '/resets/' + $('#token').val(),
+      method: 'PUT',
+      data: $('#resetForm').serialize(),
       success: data => {
         // window.location.replace('/')
       },
