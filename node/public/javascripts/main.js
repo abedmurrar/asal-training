@@ -2,6 +2,15 @@ const usernameRegex = /^[a-z](([\w][.-]{0,1}){6,22})[a-z]$/
 const emailRegex = /^[\w]([\w][.-]{0,1}?)+@([a-z0-9][_.-]{0,1}?)+\.([a-z]{2,5})$/
 const passwordRegex = /^.{7,}$/
 $(function () {
+    $('a#nav-show').on('click', function () {
+        if ($('.collapse-nav').length === 0) {
+            $('nav.tabs').addClass('collapse-nav')
+            $(this).hide().html('<i class="fas fa-angle-double-left"></i>').fadeIn('slow')
+        } else {
+            $('nav.tabs').removeClass('collapse-nav')
+            $(this).hide().html('<i class="fas fa-angle-double-down"></i>').fadeIn('slow')
+        }
+    })
     $('#username').on('keydown', function () {
         $(this)
             .removeClass('error')
