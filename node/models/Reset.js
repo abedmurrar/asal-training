@@ -1,4 +1,4 @@
-var database = require('../dbconnection')
+var database = require('../config_mysql') // reference of config_mysql.js
 var moment = require('moment')
 var User = require('./User')
 
@@ -13,22 +13,18 @@ const tables = {
 var Reset = {
 
   generateToken: (email, uuid, success, failure) => {
-    var id = 0 // no user has id of 0
     User.getUserByEmail(email, data => {
-      if (Object.keys(data).length > 0) {
-        id = data.id
-        return database(tables.resets)
-          .insert({ token: uuid, user_id: id })
-          .then(success)
-          .catch(failure)
-      }
+      database(tables.resets)
+        .insert({ token: uuid, user_id: data.id })
+        .then(success)
+        .catch(failure)
     },
       error => {
         console.log(error)
       })
   },
   getUserByToken: (token, success, failure) => {
-    return database(tables.resets)
+    database(tables.resets)
       .select('*')
       .join(tables.users, (query) => {
         query.on('user_id', '=', 'id')
@@ -40,30 +36,26 @@ var Reset = {
       .catch(failure)
   },
   getTokenByEmail: (email, success, failure) => {
-    if (email.length) {
-      return database(tables.users)
-        .join(tables.roles, (query) => {
-          query.on('u_role', '=', 'role_id')
-        })
-        .join(tables.resets, (query) => {
-          query.on('id', '=', 'user_id')
-        })
-        .select('*')
-        .where('email', email)
-        .andWhereBetween('request_time',
-          [
-            moment()
-              .subtract(1, 'days')
-              .format(format),
-            moment()
-              .format(format)
-          ])
-        .first()
-        .then(success)
-        .catch(failure)
-    } else {
-      failure({ message: 'Empty request' })
-    }
+    database(tables.users)
+      .join(tables.roles, (query) => {
+        query.on('u_role', '=', 'role_id')
+      })
+      .join(tables.resets, (query) => {
+        query.on('id', '=', 'user_id')
+      })
+      .select('*')
+      .where('email', email)
+      .andWhereBetween('request_time',
+        [
+          moment()
+            .subtract(1, 'days')
+            .format(format),
+          moment()
+            .format(format)
+        ])
+      .first()
+      .then(success)
+      .catch(failure)
   }
 }
 

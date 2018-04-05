@@ -1,4 +1,4 @@
-var database = require('../dbconnection') // reference of dbconnection.js
+var database = require('../config_mysql') // reference of config_mysql.js
 var crypto = require('crypto') // crypto package
 var moment = require('moment')
 const format = 'YYYY-MM-DD HH:mm:ss'
@@ -37,7 +37,7 @@ const tables = { // database table name
 var User = {
 
   getAllUsers: (success, failure) => {
-    return database(tables.users)
+    database(tables.users)
       .join(tables.roles, (query) => {
         query.on('u_role', '=', 'role_id')
       })
@@ -46,7 +46,7 @@ var User = {
       .catch(failure)
   },
   getUserById: (id, success, failure) => {
-    return database(tables.users)
+    database(tables.users)
       .select('id', 'username', 'password', 'email', 'role')
       .join(tables.roles, (query) => {
         query.on('u_role', '=', 'role_id')
@@ -57,34 +57,27 @@ var User = {
       .catch(failure)
   },
   getUserByUsername: (username, success, failure) => {
-    if (username.length) {
-      return database(tables.users)
-        .join(tables.roles, (query) => {
-          query.on('u_role', '=', 'role_id')
-        })
-        .select('*')
-        .where('username', username)
-        .first()
-        .then(success)
-        .catch(failure)
-    } else {
-      failure({ message: 'Empty request' })
-    }
+    database(tables.users)
+      .join(tables.roles, (query) => {
+        query.on('u_role', '=', 'role_id')
+      })
+      .select('*')
+      .where('username', username)
+      .first()
+      .then(success)
+      .catch(failure)
   },
   getUserByEmail: (email, success, failure) => {
-    if (email.length) {
-      return database(tables.users)
-        .join(tables.roles, (query) => {
-          query.on('u_role', '=', 'role_id')
-        })
-        .select('*')
-        .where('email', email)
-        .first()
-        .then(success)
-        .catch(failure)
-    } else {
-      failure({ message: 'Empty request' })
-    }
+    database(tables.users)
+      .join(tables.roles, (query) => {
+        query.on('u_role', '=', 'role_id')
+      })
+      .select('*')
+      .where('email', email)
+      .first()
+      .then(success)
+      .catch(failure)
+
   },
   addUser: (User, success, failure) => {
     var errors = {}
@@ -107,7 +100,7 @@ var User = {
       }
       if (isValid) {
         let passwordEncoded = crypto.createHash('sha256').update(password).digest('hex')
-        return database(tables.users)
+        database(tables.users)
           .insert({ username: username, password: passwordEncoded, email: email })
           .then(success)
           .catch(failure)
@@ -115,11 +108,11 @@ var User = {
       failure(errors)
     } catch (error) {
       // if a User object was passed but didn't have one of the three attributes
-      return failure()
+      failure()
     }
   },
   deleteUser: (id, success, failure) => {
-    return database(tables.users)
+    database(tables.users)
       .del()
       .where('id', id)
       .then(success)
@@ -158,7 +151,7 @@ var User = {
         }
       }
       if (Object.keys(entries).length > 0) {
-        return database(tables.users)
+        database(tables.users)
           .update(entries)
           .where('id', id)
           .then(success)
@@ -172,13 +165,13 @@ var User = {
   },
   changePassword: (id, password, confirm, success, failure) => {
     if (password && confirm && password === confirm) {
-      return User.updateUser(id, { password: password }, success, failure)
+      User.updateUser(id, { password: password }, success, failure)
     } else {
       failure({ message: 'Invalid password' })
     }
   },
   logUser: (id, success, failure) => {
-    return database(tables.users)
+    database(tables.users)
       .update({ last_logged: moment().format(format) })
       .where('id', id)
       .then(success)
