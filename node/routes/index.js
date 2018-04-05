@@ -71,7 +71,6 @@ router.post('/login', (req, res, next) => {
               session.role = data.role
               session.uid = data.id
               session.pass = req.body.password
-              req.session.cookie.expires = false
               User.logUser(
                 data.id,
                 data => {
@@ -81,8 +80,7 @@ router.post('/login', (req, res, next) => {
                   console.log(error)
                 }
               )
-              res
-                .status(HttpStatus.OK)
+              res.status(HttpStatus.OK)
                 .json({ success: true, message: 'Successfully logged in.' })
             } else {
               res.status(HttpStatus.UNAUTHORIZED).json({
@@ -241,23 +239,22 @@ router.get('/recover/:token?', (req, res, next) => {
   }
 })
 
-router.get('/about',(req,res)=>{
+router.get('/about', (req, res) => {
   session = req.session
-  if (!func.isLogged(req)) {
-    res.render('index', {
-      title: 'About',
-      logged: false,
-      page: 'about'
-    })
-  } else {
-    res.render('index', {
-      title: 'About',
-      logged: true,
-      page: 'about',
-      username: session.username,
-      role: session.role
-    })
-  }
+  res.render('index', {
+    title: 'About',
+    logged: func.isLogged(req),
+    page: 'about',
+    username: session.username,
+    role: session.role
+  })
 })
 
+// testing
+// router.get('/mongo', (req, res, next) => {
+//   var NoSQLDB = require('../mongodb/schema')
+//   NoSQLDB.model('users').find((err, users) => {
+//     res.send(users)
+//   })
+// })
 module.exports = router
