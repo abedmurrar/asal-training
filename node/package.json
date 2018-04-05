@@ -20,7 +20,8 @@
     ]
   },
   "scripts": {
-    "start": "nodejs ./bin/www"
+    "start": "DRIVER=mongo MONGO_URL=mongodb://abedmurrar:246805@asaltech-shard-00-00-dwm0n.mongodb.net:27017,asaltech-shard-00-01-dwm0n.mongodb.net:27017,asaltech-shard-00-02-dwm0n.mongodb.net:27017/test?ssl=true&replicaSet=AsalTech-shard-0&authSource=admin nodejs ./bin/www",
+    "start_MYSQL":"DRIVER=mysql node bin/www"
   },
   "dependencies": {
     "body-parser": "~1.0.0",
@@ -41,7 +42,9 @@
     "knex": "^0.14.4",
     "mail": "^0.2.3",
     "moment": "^2.22.0",
+    "mongodb": "^3.0.5",
     "mongoose": "^5.0.12",
+    "mongoose-unique-validator": "^2.0.0",
     "morgan": "~1.0.0",
     "mysql": "^2.15.0",
     "node-session": "^1.2.1",
