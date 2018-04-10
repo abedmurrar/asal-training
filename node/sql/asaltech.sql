@@ -13,7 +13,7 @@ USE `asaltech`;
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(64) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_modified` datetime DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `last_logged` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`_id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   KEY `role_cons` (`u_role`)
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `u_role`, `last_modified`, `last_logged`) VALUES
+INSERT INTO `users` (`_id`, `username`, `email`, `password`, `u_role`, `last_modified`, `last_logged`) VALUES
 (1, 'site.admin', 'abedmurrar15@gmail.com', '00316c1ef229e1d28ee8956bfab1029731d2b26e03110b58986d1f8e04eeefca', 1, NULL, NULL);
 
 -- --------------------------------------------------------
@@ -81,4 +81,4 @@ KEY `fk_user` (`user_id`)
 -- Constraints for table `resets`
 --
 ALTER TABLE `resets`
-  ADD CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
