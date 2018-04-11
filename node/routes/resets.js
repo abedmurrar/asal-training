@@ -1,51 +1,74 @@
 const express = require('express')
 const router = express.Router()
-const User = require('../models/User')
-const Reset = require('../models/Reset')
+// const User = require('../models/mysql/User')
+// const Reset = require('../models/mysql/Reset')
+const User = require('../models/mongodb/User')
 const debug = require('debug')('reset-api')
 var nodemailer = require('nodemailer')
-var uuidv1 = require('uuid/v1')
+// var uuidv1 = require('uuid/v1')
 var HttpStatus = require('http-status-codes') // http status codes package
 
 router.put('/:token', (req, res) => {
-  Reset.getUserByToken(req.params.token,
+  // Reset.getUserByToken(req.params.token,
+  User.getUserByToken(req.params.token,
     data => {
       if (Object.keys(data).length > 0) {
-        var id = data.id
+        var _id = data._id
         var password = req.body.password
         var confirm = req.body.confirmPassword
-        User.changePassword(id, password, confirm,
+        User.changePassword(_id, password, confirm,
           data => {
             if (data) {
-              res.status(HttpStatus.OK).json({ success: true, message: 'Password changed', password: 'Password changed' })
+              res.status(HttpStatus.OK).json({
+                success: true,
+                message: 'Password changed',
+                password: 'Password changed'
+              })
             } else {
-              res.status(HttpStatus.NOT_IMPLEMENTED).json({ success: false, message: 'Password not changed' })
+              res.status(HttpStatus.NOT_IMPLEMENTED).json({
+                success: false,
+                message: 'Password not changed'
+              })
             }
           },
           error => {
             if (error) {
-              res.status(HttpStatus.NOT_ACCEPTABLE).json({ success: false, message: 'Password invalid', password: 'Password invalid' })
+              res.status(HttpStatus.NOT_ACCEPTABLE).json({
+                success: false,
+                message: 'Password invalid',
+                password: 'Password invalid'
+              })
             } else {
-              res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ success: false, message: 'Inavlid parameters' })
+              res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: 'Inavlid parameters'
+              })
             }
           })
       } else {
-        res.status(HttpStatus.BAD_REQUEST).json({ success: false })
+        res.status(HttpStatus.BAD_REQUEST).json({
+          success: false
+        })
       }
     }, error => {
       if (error) {
         debug(error)
-        res.status(HttpStatus.METHOD_NOT_ALLOWED).json({ success: false })
+        res.status(HttpStatus.METHOD_NOT_ALLOWED).json({
+          success: false
+        })
       } else {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ success: false })
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          success: false
+        })
       }
     })
 })
 // here you send your email to generate a token
 router.post('/', (req, res) => {
-  var token = uuidv1()
+  // var token = uuidv1()
   try {
-    Reset.generateToken(req.body.email, token,
+    // Reset.generateToken(req.body.email, token,
+    User.generateToken(req.body.email,
       data => {
         if (data.length > 0) {
           var transporter = nodemailer.createTransport({
@@ -67,22 +90,34 @@ router.post('/', (req, res) => {
 
           transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-              res.status(HttpStatus.NOT_IMPLEMENTED).json({ success: false, message: error })
+              res.status(HttpStatus.NOT_IMPLEMENTED).json({
+                success: false,
+                message: error
+              })
               console.log(error)
             } else {
-              res.status(HttpStatus.OK).json({ success: true, message: info.response })
+              res.status(HttpStatus.OK).json({
+                success: true,
+                message: info.response
+              })
               console.log('Email sent: ' + info.response)
             }
           })
         }
       },
       error => {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ success: false, message: 'Check the parameters' })
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          message: 'Check the parameters'
+        })
         console.log(error)
       }
     )
   } catch (error) {
-    res.status(HttpStatus.NOT_IMPLEMENTED).json({ success: false, message: 'Email is invalid' })
+    res.status(HttpStatus.NOT_IMPLEMENTED).json({
+      success: false,
+      message: 'Email is invalid'
+    })
   }
 })
 module.exports = router
