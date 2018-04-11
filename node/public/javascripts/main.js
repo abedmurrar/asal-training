@@ -60,7 +60,7 @@ $(function () {
                         }
                     })
                 },
-                No: function () { }
+                No: function () {}
             }
         })
     })
@@ -166,7 +166,10 @@ $(function () {
                 url: '/login',
                 method: 'post',
                 // data: ,
-                data: { username: username, password: password },
+                data: {
+                    username: username,
+                    password: password
+                },
                 success: () => {
                     window.location.replace('/')
                 },
@@ -284,7 +287,7 @@ $(function () {
                         }
                     })
                 },
-                No: function () { }
+                No: function () {}
 
             }
         })
@@ -346,6 +349,7 @@ function response(data) {
         }
     }
 }
+
 function getUsers() {
     $.ajax({
         url: '/users/',
@@ -358,6 +362,7 @@ function getUsers() {
         }
     })
 }
+
 function row(user) {
     return '<tr>' +
         '<td id="id" user="' + user.id + '">' +

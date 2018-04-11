@@ -1,7 +1,9 @@
 var local = {
   // check if user is logged from sessions
   isLogged: req => {
-    if (req.session.username) { return true }
+    if (req.session.username) {
+      return true
+    }
     return false
   }
 }
