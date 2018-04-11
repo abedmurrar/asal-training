@@ -20,8 +20,9 @@
     ]
   },
   "scripts": {
-    "start": "DRIVER=mongo MONGO_URL=mongodb://abedmurrar:246805@asaltech-shard-00-00-dwm0n.mongodb.net:27017,asaltech-shard-00-01-dwm0n.mongodb.net:27017,asaltech-shard-00-02-dwm0n.mongodb.net:27017/test?ssl=true&replicaSet=AsalTech-shard-0&authSource=admin nodejs ./bin/www",
-    "start_MYSQL": "DRIVER=mysql node bin/www"
+    "start": "DRIVER=MONGO MONGO_URL=mongodb://abedmurrar:246805@asaltech-shard-00-00-dwm0n.mongodb.net:27017,asaltech-shard-00-01-dwm0n.mongodb.net:27017,asaltech-shard-00-02-dwm0n.mongodb.net:27017/test?ssl=true&replicaSet=AsalTech-shard-0&authSource=admin nodejs ./bin/www",
+    "start_MYSQL": "DRIVER=MYSQL node ./bin/www.js",
+    "debug": "node --nolazy --inspect-brk=9229 ./bin/www.js"
   },
   "dependencies": {
     "body-parser": "~1.0.0",
@@ -40,6 +41,7 @@
     "http": "0.0.0",
     "http-status-code": "^2.1.0",
     "http-status-codes": "^1.3.0",
+    "is": "^3.2.1",
     "jade": "~1.3.0",
     "knex": "^0.14.4",
     "mail": "^0.2.3",
