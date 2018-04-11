@@ -1,12 +1,15 @@
-var express = require('express')
-var router = express.Router()
-var HttpStatus = require('http-status-codes') // http status codes package
-const User = require('../models/User')
-const Reset = require('../models/Reset')
-var crypto = require('crypto') // crypto package
-var func = require('../func')
+var express = require('express'),
+  router = express.Router(),
+  HttpStatus = require('http-status-codes'), // http status codes package
+  crypto = require('crypto'), // crypto package
+  func = require('../func'),
+  session
 
-var session
+
+// const User = require('../models/mysql/User') //mysql
+// const Reset = require('../models/mysql/Reset') //mysql
+const User = require('../models/mongodb/User'), //mongodb
+  is = require('is')
 
 /* GET home page. */
 router.get('/', (req, res) => {
@@ -56,10 +59,18 @@ router.post('/login', (req, res, next) => {
   try {
     // check if session is not set
     if (!session.username) {
+      if (is.undefined(req.body.username) || is.empty(req.body.username))
+        throw Object.assign(new Error('Username can not be empty'), {
+          username: 'Username can not be empty'
+        })
+      if (is.undefined(req.body.password) || is.empty(req.body.username))
+        throw Object.assign(new TypeError('Password can not be empty'), {
+          password: 'Password can not be empty'
+        })
       User.getUserByUsername(
         req.body.username,
         data => {
-          if (typeof data !== 'undefined') {
+          if (!is.undefined(data) && !is.null(data)) {
             var passwordEncoded = crypto
               .createHash('sha256')
               .update(req.body.password)
@@ -69,19 +80,24 @@ router.post('/login', (req, res, next) => {
               session.username = data.username
               session.email = data.email
               session.role = data.role
-              session.uid = data.id
+              session.uid = data._id
               session.pass = req.body.password
+              /* mysql
               User.logUser(
-                data.id,
+                data._id,
                 data => {
-                  console.log(data)
+                  console.info(data)
                 },
                 error => {
-                  console.log(error)
+                  console.error(error)
                 }
               )
+              */
               res.status(HttpStatus.OK)
-                .json({ success: true, message: 'Successfully logged in.' })
+                .json({
+                  success: true,
+                  message: 'Successfully logged in.'
+                })
             } else {
               res.status(HttpStatus.UNAUTHORIZED).json({
                 success: false,
@@ -116,11 +132,7 @@ router.post('/login', (req, res, next) => {
       next(err)
     }
   } catch (error) {
-    next(
-      new ReferenceError(
-        "Our aliens are working on your error right now, don't miss an input"
-      )
-    )
+    next(error)
   }
 })
 
@@ -202,7 +214,8 @@ router.get('/recover/:token?', (req, res, next) => {
     next(err)
   } else {
     if (req.params.token) {
-      Reset.getUserByToken(req.params.token,
+      // Reset.getUserByToken(req.params.token,
+      User.getUserByToken(req.params.token,
         data => {
           if (Object.keys(data).length) {
             res.render('index', {
@@ -250,11 +263,4 @@ router.get('/about', (req, res) => {
   })
 })
 
-// testing
-// router.get('/mongo', (req, res, next) => {
-//   var NoSQLDB = require('../mongodb/schema')
-//   NoSQLDB.model('users').find((err, users) => {
-//     res.send(users)
-//   })
-// })
 module.exports = router
