@@ -20,7 +20,7 @@
     ]
   },
   "scripts": {
-    "start": "DRIVER=MONGO MONGO_URL=mongodb://abedmurrar:246805@asaltech-shard-00-00-dwm0n.mongodb.net:27017,asaltech-shard-00-01-dwm0n.mongodb.net:27017,asaltech-shard-00-02-dwm0n.mongodb.net:27017/test?ssl=true&replicaSet=AsalTech-shard-0&authSource=admin nodejs ./bin/www",
+    "start": "node ./bin/www",
     "start_MYSQL": "DRIVER=MYSQL node ./bin/www.js",
     "debug": "node --nolazy --inspect-brk=9229 ./bin/www.js"
   },
