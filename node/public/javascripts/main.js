@@ -40,7 +40,7 @@ $(function () {
     })
     /* ACCOUNT PAGE */
     $('#delete').on('click', () => {
-        var id = $('#id').val()
+        var _id = $('#_id').val()
         var method = 'DELETE'
         $.confirm({
             title: 'Confirm deletion',
@@ -48,7 +48,7 @@ $(function () {
             buttons: {
                 Yes: function () {
                     $.ajax({
-                        url: '/users/' + id,
+                        url: '/users/' + _id,
                         method: method,
                         success: () => {
                             $.alert('Deleted!')
@@ -66,20 +66,19 @@ $(function () {
     })
     $('#accountForm').on('submit', event => {
         event.preventDefault()
-        var username = $('#username').val().trim()
         var password = $('#password').val().trim()
         var email = $('#email').val().trim()
         var isValid = true
         // check validity
-        var id = $('#id').val().trim()
-        if (username === '' || !usernameRegex.test(username)) {
-            isValid = false
-            $('#username')
-                .addClass('error')
-            $('.username-msg')
-                .html('Invalid username')
-                .addClass('error-hint')
-        }
+        var _id = $('#_id').val().trim()
+        // if (username === '' || !usernameRegex.test(username)) {
+        //     isValid = false
+        //     $('#username')
+        //         .addClass('error')
+        //     $('.username-msg')
+        //         .html('Invalid username')
+        //         .addClass('error-hint')
+        // }
         if (password === '' || !passwordRegex.test(password)) {
             isValid = false
             $('#password')
@@ -98,7 +97,7 @@ $(function () {
         }
         if (isValid) {
             $.ajax({
-                url: '/users/' + id,
+                url: '/users/' + _id,
                 method: 'PUT',
                 data: $('#accountForm').serialize(),
                 success: () => {
@@ -118,6 +117,7 @@ $(function () {
     /* RECOVER PAGE */
     $('#recoverForm').on('submit', event => {
         event.preventDefault()
+        alert('sup')
         var email = $('#email').val().trim()
         var isValid = true
         // check validity
@@ -128,6 +128,7 @@ $(function () {
                 .html('Invalid email')
                 .addClass('error-hint')
         }
+        alert(isValid)
         if (isValid) {
             $.ajax({
                 url: '/resets/',
@@ -136,6 +137,9 @@ $(function () {
                 success: () => {
                     $('#recoverForm')[0].reset()
                     $('#msg').html('Request is sent, if your email exists you will receive an email to reset your password')
+                },
+                error: (err) => {
+                    console.log(err)
                 }
             })
         }
@@ -267,15 +271,15 @@ $(function () {
     /* MANAGE PAGE */
     $(document).on('click', '#deleteUser', event => {
         var btn = event.currentTarget
-        var id = $(btn).attr('user')
-        var username = $("#username[user^='" + id + "']").html()
+        var _id = $(btn).attr('user')
+        var username = $("#username[user^='" + _id + "']").html()
         $.confirm({
             title: 'Confirm deletion',
             content: 'Are you sure you want to delete <strong>' + username + '</strong> ?',
             buttons: {
                 Yes: function () {
                     $.ajax({
-                        url: '/users/' + id,
+                        url: '/users/' + _id,
                         method: 'delete',
                         success: () => {
                             $.alert('Deleted!')
@@ -365,19 +369,19 @@ function getUsers() {
 
 function row(user) {
     return '<tr>' +
-        '<td id="id" user="' + user.id + '">' +
-        user.id +
+        '<td id="_id" user="' + user._id + '">' +
+        user._id +
         '</td>' +
-        '<td id="username" user="' + user.id + '">' +
+        '<td id="username" user="' + user._id + '">' +
         user.username +
         '</td>' +
-        '<td id="email" user="' + user.id + '">' +
+        '<td id="email" user="' + user._id + '">' +
         user.email +
         '</td>' +
-        '<td id="role" user="' + user.id + '">' +
+        '<td id="role" user="' + user._id + '">' +
         user.role +
         '</td>' +
         '<td>' +
-        '<button id="deleteUser" user="' + user.id + '">Delete</button></td>' +
+        '<button id="deleteUser" user="' + user._id + '">Delete</button></td>' +
         '</tr>'
 }
