@@ -1,5 +1,6 @@
 #!/usr/bin/nodejs
 
+require('dotenv').config()
 var debug = require('debug')('my-application')
 var app = require('../app')
 
