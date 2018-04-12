@@ -1,17 +1,17 @@
-var express = require('express')
-var path = require('path')
-var logger = require('morgan')
-var cookieParser = require('cookie-parser')
-var bodyParser = require('body-parser')
-var cors = require('cors')
-var routes = require('./routes/index')
-var users = require('./routes/users')
-var resets = require('./routes/resets')
-var helmet = require('helmet')
-var session = require('express-session')
-var func = require('./func')
-// var Tasks = require('./routes/Tasks');
-var app = express()
+var express = require('express'),
+  path = require('path'),
+  logger = require('morgan'),
+  cookieParser = require('cookie-parser'),
+  bodyParser = require('body-parser'),
+  cors = require('cors'),
+  routes = require('./routes/index'),
+  users = require('./routes/users'),
+  resets = require('./routes/resets'),
+  helmet = require('helmet'),
+  session = require('express-session'),
+  func = require('./func'),
+  // Tasks = require('./routes/Tasks'),
+  app = express()
 // setting up domain for developlment
 // should be changed for production
 const DOMAIN = 'http://localhost:8080'
@@ -73,7 +73,7 @@ app.use((req, res, next) => {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use((err, req, res) => {
+  app.use((err, req, res, next) => {
     var page = 'handle/error'
     var title = 'Error'
     res.status(err.status || 500)
@@ -93,7 +93,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   res.status(err.status || 500)
   res.render('error', {
     message: err.message,
