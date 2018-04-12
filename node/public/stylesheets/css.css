@@ -80,6 +80,10 @@ nav.tabs a:hover {
     color: black;
 }
 
+.form div .field.disabled{
+    background: #aaa;
+}
+
 .form .btn {
     width: 50% !important;
     justify-self: center;
