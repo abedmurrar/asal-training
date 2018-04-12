@@ -7,6 +7,7 @@ const debug = require('debug')('reset-api')
 var nodemailer = require('nodemailer')
 // var uuidv1 = require('uuid/v1')
 var HttpStatus = require('http-status-codes') // http status codes package
+var is = require('is')
 
 router.put('/:token', (req, res) => {
   // Reset.getUserByToken(req.params.token,
@@ -70,7 +71,7 @@ router.post('/', (req, res) => {
     // Reset.generateToken(req.body.email, token,
     User.generateToken(req.body.email,
       data => {
-        if (data.length > 0) {
+        if (!is.null(data) && !is.undefined(data) && !is.empty(data)) {
           var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -85,7 +86,7 @@ router.post('/', (req, res) => {
             subject: 'Password reset for asaltech Abed Al Rahman Murrar Task',
             html: "<p>You've received this email because of a password reset request" +
               ", if you didn't make this request you can ignore it, otherwise, " +
-              'you have 24 hours before your request is invalid. If you don\'t remember making this request ignore this email.</p> <a href="http://localhost:8080/recover/' + token + '">Reset now</a> '
+              'you have 24 hours before your request is invalid. If you don\'t remember making this request ignore this email.</p> <a href="http://localhost:8080/recover/' + data.token + '">Reset now</a> '
           }
 
           transporter.sendMail(mailOptions, (error, info) => {
@@ -102,6 +103,11 @@ router.post('/', (req, res) => {
               })
               console.log('Email sent: ' + info.response)
             }
+          })
+        } else{
+          res.status(HttpStatus.NOT_IMPLEMENTED).json({
+            success: false,
+            message: 'does not exist'
           })
         }
       },

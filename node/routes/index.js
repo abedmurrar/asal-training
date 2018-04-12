@@ -61,7 +61,8 @@ router.post('/login', (req, res, next) => {
     if (!session.username) {
       if (is.undefined(req.body.username) || is.empty(req.body.username))
         throw Object.assign(new Error('Username can not be empty'), {
-          username: 'Username can not be empty'
+          username: 'Username can not be empty',
+          status: HttpStatus.NOT_IMPLEMENTED
         })
       if (is.undefined(req.body.password) || is.empty(req.body.username))
         throw Object.assign(new TypeError('Password can not be empty'), {
@@ -132,7 +133,9 @@ router.post('/login', (req, res, next) => {
       next(err)
     }
   } catch (error) {
-    next(error)
+    error.success = false
+    res.status(HttpStatus.NOT_IMPLEMENTED).json(error)
+    // next(error)
   }
 })
 

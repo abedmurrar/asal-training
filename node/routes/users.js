@@ -3,6 +3,7 @@ const router = express.Router()
 //const User = require('../models/mysql/User')
 const User = require('../models/mongodb/User')
 var HttpStatus = require('http-status-codes') // http status codes package
+var is = require('is')
 var session
 
 router.get('/:id?', (req, res) => {
@@ -66,21 +67,30 @@ router.post('/', (req, res) => {
     },
     error => {
       if (error) {
-        if (error.code === 'ER_DUP_ENTRY') {
-          if (error.sqlMessage.includes('username')) {
-            res.status(HttpStatus.BAD_REQUEST).json({
-              success: false,
-              message: error.sqlMessage,
-              username: 'Username already exists'
-            })
-          } else if (error.sqlMessage.includes('email')) {
+        if (error.name === 'ValidationError') {
+          if (!is.undefined(error.errors.email)) {
             res.status(409).json({
               success: false,
               message: error.sqlMessage,
               email: 'Email already registered'
             })
           }
-        } else {
+          if (!is.undefined(error.errors.username)) {
+            res.status(HttpStatus.BAD_REQUEST).json({
+              success: false,
+              message: error.sqlMessage,
+              username: 'Username already exists'
+            })
+          }
+        }
+        // if (error.code === 'ER_DUP_ENTRY') {
+        //   if (error.sqlMessage.includes('username')) {
+
+        //   } else if (error.sqlMessage.includes('email')) {
+
+        //   }
+        // } 
+        else {
           error.success = false
           res.status(HttpStatus.BAD_REQUEST).json(error)
         }
