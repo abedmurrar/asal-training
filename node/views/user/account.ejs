@@ -2,9 +2,9 @@
     <form id="accountForm" class="account form" method="PUT" action="/users/<%= id %>">
         <h2>Edit account</h2>
         <label for="username">Username</label>
-        <input type="hidden" id="id" value="<%= id %>">
+        <input type="hidden" id="_id" value="<%= id %>">
         <div>
-            <input type="text" name="username" id="username" placeholder="Username" class="field" value="<%= username %>">
+            <input type="text" class="field disabled" value="<%= username %>" disabled>
             <p class="hint username-msg">Enter your username</p>
         </div>
         <label for="password">Password</label>
