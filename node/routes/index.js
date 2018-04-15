@@ -1,178 +1,91 @@
 var express = require('express'),
   router = express.Router(),
-  HttpStatus = require('http-status-codes'), // http status codes package
   crypto = require('crypto'), // crypto package
   func = require('../func'),
   session
 
-
-// const User = require('../models/mysql/User') //mysql
-// const Reset = require('../models/mysql/Reset') //mysql
 const User = require('../models/mongodb/User'), //mongodb
-  is = require('is')
+  _ = require('underscore'),
+  HttpStatus = require('http-status-codes') // http status codes package
 
 /* GET home page. */
 router.get('/', (req, res) => {
   session = req.session
-  if (!func.isLogged(req)) {
-    res.render('index', {
-      title: 'Home',
-      logged: false,
-      page: 'guest/home'
-    })
-  } else {
-    res.render('index', {
-      title: 'Home',
-      logged: true,
-      page: 'user/home',
-      username: session.username,
-      role: session.role
-    })
-  }
+  var isLogged = func.isLogged(req)
+  return res.render('index', {
+    title: 'Home',
+    logged: isLogged,
+    page: isLogged ? 'user/home' : 'guest/home',
+    username: session.username,
+    role: session.role
+  })
 })
-
 /* GET login page */
 router.get('/login', (req, res) => {
-  // if user is not logged in then respond with login page
-  // if user is logged and tried to get this page then respond with home page
   session = req.session
-  if (!func.isLogged(req)) {
-    res.render('index', {
-      logged: false,
-      title: 'Login',
-      page: 'guest/login'
-    })
-  } else {
-    res.render('index', {
-      logged: true,
-      title: 'Home',
-      page: 'user/home',
-      username: session.username,
-      role: session.role
-    })
-  }
+  if (func.isLogged(req))
+    return res.redirect('/')
+  return res.render('index', {
+    logged: false,
+    title: 'Login',
+    page: 'guest/login'
+  })
 })
-
 /* POST to login page */
 router.post('/login', (req, res, next) => {
   session = req.session
-  try {
-    // check if session is not set
-    if (!session.username) {
-      if (is.undefined(req.body.username) || is.empty(req.body.username))
-        throw Object.assign(new Error('Username can not be empty'), {
-          username: 'Username can not be empty',
-          status: HttpStatus.NOT_IMPLEMENTED
+  User.getUserByUsername(
+    req.body.username,
+    data => {
+      var passwordEncoded = crypto
+        .createHash('sha256')
+        .update(req.body.password)
+        .digest('hex')
+      // check if password entered is same as stored
+      if (passwordEncoded === data.password) {
+        session.username = data.username
+        session.email = data.email
+        session.role = data.role
+        session.uid = data._id
+        session.pass = req.body.password
+        return res.status(HttpStatus.OK)
+          .json({
+            success: true,
+            message: 'Successfully logged in.'
+          })
+      } else {
+        throw Object.assign(new Error('Wrong password!'), {
+          password: 'Wrong password'
         })
-      if (is.undefined(req.body.password) || is.empty(req.body.username))
-        throw Object.assign(new TypeError('Password can not be empty'), {
-          password: 'Password can not be empty'
-        })
-      User.getUserByUsername(
-        req.body.username,
-        data => {
-          if (!is.undefined(data) && !is.null(data)) {
-            var passwordEncoded = crypto
-              .createHash('sha256')
-              .update(req.body.password)
-              .digest('hex')
-            // check if password entered is same as stored
-            if (passwordEncoded === data.password) {
-              session.username = data.username
-              session.email = data.email
-              session.role = data.role
-              session.uid = data._id
-              session.pass = req.body.password
-              /* mysql
-              User.logUser(
-                data._id,
-                data => {
-                  console.info(data)
-                },
-                error => {
-                  console.error(error)
-                }
-              )
-              */
-              res.status(HttpStatus.OK)
-                .json({
-                  success: true,
-                  message: 'Successfully logged in.'
-                })
-            } else {
-              res.status(HttpStatus.UNAUTHORIZED).json({
-                success: false,
-                message: 'Wrong password, try again.',
-                password: 'Wrong password'
-              })
-            }
-          } else {
-            res.status(HttpStatus.UNAUTHORIZED).json({
-              success: false,
-              message: 'username does not exist',
-              username: 'username does not exist'
-            })
-          }
-        },
-        error => {
-          if (error) {
-            error.success = false
-            res.status(HttpStatus.BAD_GATEWAY).json(error)
-          } else {
-            res.status(HttpStatus.BAD_GATEWAY).json({
-              success: false,
-              message: 'username can not be empty',
-              username: 'username can not be empty'
-            })
-          }
-        }
-      )
-    } else {
-      var err = new Error("you're already logged in!!")
-      err.status = HttpStatus.NOT_IMPLEMENTED
-      next(err)
+      }
+    },
+    error => {
+      next(error)
     }
-  } catch (error) {
-    error.success = false
-    res.status(HttpStatus.NOT_IMPLEMENTED).json(error)
-    // next(error)
-  }
+  )
 })
-
 router.get('/logout', (req, res) => {
   req.session.destroy()
-  res.status(HttpStatus.OK).redirect('/')
+  return res.status(HttpStatus.OK).redirect('/')
 })
-
 /* GET register page */
 router.get('/register', (req, res) => {
   session = req.session
-  if (!func.isLogged(req)) {
-    res.render('index', {
-      logged: false,
-      title: 'Register',
-      page: 'guest/register'
-    })
-  } else {
-    res.render('index', {
-      logged: true,
-      title: 'Home',
-      page: 'user/home',
-      username: session.username,
-      role: session.role
-    })
-  }
+  if (func.isLogged(req))
+    return res.redirect('/')
+  return res.render('index', {
+    logged: false,
+    title: 'Register',
+    page: 'guest/register'
+  })
 })
-
 /* GET account page */
 router.get('/account', (req, res, next) => {
   session = req.session
   if (!func.isLogged(req)) {
-    var err = new Error('Page not found')
-    err.status = HttpStatus.NOT_FOUND
-    next(err)
+    return next()
   } else {
-    res.render('index', {
+    return res.render('index', {
       logged: true,
       title: 'Home',
       page: 'user/account',
@@ -184,16 +97,10 @@ router.get('/account', (req, res, next) => {
     })
   }
 })
-
 /* GET manage page */
 router.get('/manage', (req, res, next) => {
   session = req.session
-  var err
-  if (!func.isLogged(req)) {
-    err = new Error("Apparently, this page doesn't exist on out server")
-    err.status = HttpStatus.NOT_FOUND
-    next(err)
-  } else if (session.role === 'admin') {
+  if (session.role === 'admin') {
     res.render('index', {
       logged: true,
       title: 'Manage',
@@ -202,25 +109,20 @@ router.get('/manage', (req, res, next) => {
       role: session.role
     })
   } else {
-    err = new Error('Only admins please, not authorized')
-    err.status = HttpStatus.UNAUTHORIZED
-    next(err)
+    next()
   }
 })
-
 /* GET recover page */
 router.get('/recover/:token?', (req, res, next) => {
   session = req.session
   if (func.isLogged(req)) {
-    var err = new Error('Only logged out users can recover their password, you can change your password in account page.')
-    err.status = HttpStatus.NOT_ACCEPTABLE
-    next(err)
+    next(new Error('Only logged out users can recover their password, you can change your password in account page.'))
   } else {
     if (req.params.token) {
       // Reset.getUserByToken(req.params.token,
       User.getUserByToken(req.params.token,
         data => {
-          if (Object.keys(data).length) {
+          if (!_.isEmpty(data)) {
             res.render('index', {
               logged: false,
               title: 'Reset Password',
@@ -254,7 +156,6 @@ router.get('/recover/:token?', (req, res, next) => {
     }
   }
 })
-
 router.get('/about', (req, res) => {
   session = req.session
   res.render('index', {
@@ -265,5 +166,22 @@ router.get('/about', (req, res) => {
     role: session.role
   })
 })
-
+router.use((error, req, res, next) => {
+  next(error)
+})
+router.use('/login', (error, req, res, next) => {
+  if (error instanceof TypeError) {
+    return res.status(HttpStatus.NOT_ACCEPTABLE).json({
+      success: false,
+      message: 'Username does not exist',
+      username: 'Does not exist'
+    })
+  }
+  return res.status(HttpStatus.NOT_ACCEPTABLE).json({
+    success: false,
+    message: error.message,
+    password: error.password,
+    username: error.username
+  })
+})
 module.exports = router

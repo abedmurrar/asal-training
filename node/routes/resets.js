@@ -1,129 +1,87 @@
-const express = require('express')
-const router = express.Router()
-// const User = require('../models/mysql/User')
-// const Reset = require('../models/mysql/Reset')
-const User = require('../models/mongodb/User')
-const debug = require('debug')('reset-api')
-var nodemailer = require('nodemailer')
-// var uuidv1 = require('uuid/v1')
-var HttpStatus = require('http-status-codes') // http status codes package
-var is = require('is')
+const express = require('express'),
+  router = express.Router(),
+  // const User = require('../models/mysql/User')
+  // const Reset = require('../models/mysql/Reset')
+  User = require('../models/mongodb/User'),
+  HttpStatus = require('http-status-codes') // http status codes package
 
-router.put('/:token', (req, res) => {
+var nodemailer = require('nodemailer')
+
+router.put('/:token', (req, res, next) => {
   // Reset.getUserByToken(req.params.token,
   User.getUserByToken(req.params.token,
     data => {
-      if (Object.keys(data).length > 0) {
-        var _id = data._id
-        var password = req.body.password
-        var confirm = req.body.confirmPassword
-        User.changePassword(_id, password, confirm,
-          data => {
-            if (data) {
-              res.status(HttpStatus.OK).json({
-                success: true,
-                message: 'Password changed',
-                password: 'Password changed'
-              })
-            } else {
-              res.status(HttpStatus.NOT_IMPLEMENTED).json({
-                success: false,
-                message: 'Password not changed'
-              })
-            }
-          },
-          error => {
-            if (error) {
-              res.status(HttpStatus.NOT_ACCEPTABLE).json({
-                success: false,
-                message: 'Password invalid',
-                password: 'Password invalid'
-              })
-            } else {
-              res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: 'Inavlid parameters'
-              })
-            }
-          })
-      } else {
-        res.status(HttpStatus.BAD_REQUEST).json({
-          success: false
+      var _id = data._id
+      var password = req.body.password
+      var confirm = req.body.confirmPassword
+      return User.changePassword(_id, password, confirm,
+        data => {
+          if (data) {
+            return res.status(HttpStatus.OK).json({
+              success: true,
+              message: 'Password changed',
+              password: 'Password changed'
+            })
+          } else {
+            return res.status(HttpStatus.NOT_IMPLEMENTED).json({
+              success: false,
+              message: 'Password not changed'
+            })
+          }
+        },
+        error => {
+          return next(error)
         })
-      }
+
     }, error => {
-      if (error) {
-        debug(error)
-        res.status(HttpStatus.METHOD_NOT_ALLOWED).json({
-          success: false
-        })
-      } else {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-          success: false
-        })
-      }
+      return next(error)
     })
 })
-// here you send your email to generate a token
-router.post('/', (req, res) => {
-  // var token = uuidv1()
-  try {
-    // Reset.generateToken(req.body.email, token,
-    User.generateToken(req.body.email,
-      data => {
-        if (!is.null(data) && !is.undefined(data) && !is.empty(data)) {
-          var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: 'asaltechmailer@gmail.com',
-              pass: '0598243335admin'
-            }
-          })
 
-          var mailOptions = {
-            from: 'asaltechmailer@gmail.com',
-            to: req.body.email,
-            subject: 'Password reset for asaltech Abed Al Rahman Murrar Task',
-            html: "<p>You've received this email because of a password reset request" +
-              ", if you didn't make this request you can ignore it, otherwise, " +
-              'you have 24 hours before your request is invalid. If you don\'t remember making this request ignore this email.</p> <a href="http://localhost:8080/recover/' + data.token + '">Reset now</a> '
-          }
-
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              res.status(HttpStatus.NOT_IMPLEMENTED).json({
-                success: false,
-                message: error
-              })
-              console.log(error)
-            } else {
-              res.status(HttpStatus.OK).json({
-                success: true,
-                message: info.response
-              })
-              console.log('Email sent: ' + info.response)
-            }
-          })
-        } else{
-          res.status(HttpStatus.NOT_IMPLEMENTED).json({
-            success: false,
-            message: 'does not exist'
+router.post('/', (req, res, next) => {
+  User.generateToken(req.body.email,
+    data => {
+      nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'asaltechmailer@gmail.com',
+          pass: '0598243335admin'
+        }
+      }).sendMail({
+        from: 'asaltechmailer@gmail.com',
+        to: req.body.email,
+        subject: 'Password reset for asaltech Abed Al Rahman Murrar Task',
+        html: "<p>You've received this email because of a password reset request" +
+          ", if you didn't make this request you can ignore it, otherwise, " +
+          'you have 24 hours before your request is invalid. If you don\'t remember making this request ignore this email.</p> <a href="http://localhost:8080/recover/' + data.token + '">Reset now</a> '
+      }, (error, info) => {
+        if (error) {
+          return next(new Error('Mail not sent'))
+        } else {
+          return res.status(HttpStatus.OK).json({
+            success: true,
+            message: info.response
           })
         }
-      },
-      error => {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-          success: false,
-          message: 'Check the parameters'
-        })
-        console.log(error)
-      }
-    )
-  } catch (error) {
-    res.status(HttpStatus.NOT_IMPLEMENTED).json({
-      success: false,
-      message: 'Email is invalid'
-    })
-  }
+      })
+    },
+    error => {
+      return next(error)
+    }
+  )
+})
+
+router.use('/:token', (error, req, res, next) => {
+  return res.status(HttpStatus.BAD_REQUEST).json({
+    success: false,
+    message: 'Token may be timed out, or passwords do not match'
+  })
+})
+
+router.use((error, req, res, next) => {
+  return res.status(HttpStatus.BAD_REQUEST).json({
+    success: false,
+    message: 'Could not make your request, please check if the email is inserted correctly'
+  })
 })
 module.exports = router
