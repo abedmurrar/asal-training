@@ -20,9 +20,7 @@ const DOMAIN = 'http://localhost:8080'
 app.use(session({
   secret: 'my-application',
   resave: true,
-  cookie: {
-    cookie: false
-  },
+  cookie: { secure: true },
   saveUninitialized: true
 }))
 
@@ -68,36 +66,27 @@ app.use((req, res, next) => {
   next(err)
 })
 
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use((err, req, res, next) => {
-    var page = 'handle/error'
-    var title = 'Error'
-    res.status(err.status || 500)
-    if (err.status === 403) {
-      page = 'handle/forbidden'
-      title = 'Forbidden'
-    }
-    res.render('index', {
-      title: title,
-      page: page,
-      logged: func.isLogged(req),
-      role: req.session.role,
-      message: err.message
-    })
-  })
-}
-
-// production error handler
-// no stacktraces leaked to user
+// error handler
 app.use((err, req, res, next) => {
+  // production error handler
+  // no stacktraces leaked to user
+  if (app.get('env') !== 'development') {
+    delete err.stack
+  }
+  var page = 'handle/error'
+  var title = 'Error'
   res.status(err.status || 500)
-  res.render('error', {
+  if (err.status === 403) {
+    page = 'handle/forbidden'
+    title = 'Forbidden'
+  }
+  res.render('index', {
+    title: title,
+    page: page,
+    logged: func.isLogged(req),
+    role: req.session.role,
     message: err.message,
-    error: {}
+    stacktrace: err.stack
   })
 })
 module.exports = app
