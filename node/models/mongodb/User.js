@@ -135,9 +135,10 @@ UserSchema.statics.updateUser = function (_id, userData, success, failure) {
         .catch(failure)
 }
 UserSchema.statics.changePassword = function (_id, password, confirm, success, failure) {
-    if (password === confirm) {
+    if (password !== '' && password === confirm) {
         this.findById(_id)
             .then(function (user) {
+                //delete user.token
                 user.password = password
                 user.save()
                     .then(success)
