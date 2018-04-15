@@ -1,4 +1,4 @@
-var knex = require('knex')({
+module.exports = require('knex')({
   client: 'mysql',
   connection: {
     host: 'localhost',
@@ -7,4 +7,3 @@ var knex = require('knex')({
     database: 'asaltech'
   }
 })
-module.exports = knex
