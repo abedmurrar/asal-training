@@ -16,11 +16,7 @@ router.get('/:id?', (req, res, next) => {
         } else {
           return res.status(HttpStatus.NO_CONTENT).json(req.body)
         }
-      },
-      error => {
-        next(error)
-      }
-    )
+      }, next)
   } else if (session.username && session.role === 'admin') {
     User.getAllUsers(
       users => {
@@ -29,11 +25,7 @@ router.get('/:id?', (req, res, next) => {
         } else {
           return res.status(HttpStatus.NO_CONTENT).json(req.body)
         }
-      },
-      error => {
-        return next(error)
-      }
-    )
+      }, next)
   } else {
     res.status(HttpStatus.FORBIDDEN)
     return next(null)
@@ -51,11 +43,7 @@ router.post('/', (req, res, next) => {
       } else {
         return res.status(HttpStatus.NOT_IMPLEMENTED).json(req.body)
       }
-    },
-    error => {
-      return next(error)
-    }
-  )
+    }, next)
 })
 router.delete('/:id', (req, res, next) => {
   session = req.session
@@ -70,10 +58,7 @@ router.delete('/:id', (req, res, next) => {
         } else {
           return res.status(HttpStatus.NOT_IMPLEMENTED).json(req.body)
         }
-      },
-      error => {
-        return next(error)
-      })
+      },next)
   } else {
     res.status(HttpStatus.FORBIDDEN)
     return next(null)
@@ -95,10 +80,7 @@ router.put('/:id', (req, res, next) => {
         } else {
           return res.status(HttpStatus.NOT_MODIFIED).json(req.body)
         }
-      },
-      error => {
-        return next(error)
-      })
+      },next)
   } else {
     res.status(HttpStatus.FORBIDDEN)
     return next(null)
