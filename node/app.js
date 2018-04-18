@@ -15,13 +15,27 @@ var express = require('express'),
 // setting up domain for developlment
 // should be changed for production
 const DOMAIN = 'http://localhost:8080'
+const MongoStore = require('connect-mongo')(session)
+const dbConnection = require('./config_mongodb')
+
+app.enable('trust proxy')
+app.disable('x-powered-by')
 
 // setting sessions
+var expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
 app.use(session({
-  secret: 'my-application',
+  secret: 'YWJlZG11cnJhcg==',
   resave: true,
-  cookie: { secure: true },
-  saveUninitialized: true
+  name: 'sess',
+  cookie: {
+    secure: app.get('env') !== 'development' ? true : false,
+    httpOnly: true,
+    expires: expiryDate
+  },
+  saveUninitialized: true,
+  store: new MongoStore({
+    mongooseConnection: dbConnection.connection
+  })
 }))
 
 // setting header security
