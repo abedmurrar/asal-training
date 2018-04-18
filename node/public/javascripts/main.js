@@ -117,7 +117,6 @@ $(function () {
     /* RECOVER PAGE */
     $('#recoverForm').on('submit', event => {
         event.preventDefault()
-        alert('sup')
         var email = $('#email').val().trim()
         var isValid = true
         // check validity
@@ -128,19 +127,14 @@ $(function () {
                 .html('Invalid email')
                 .addClass('error-hint')
         }
-        alert(isValid)
         if (isValid) {
             $.ajax({
                 url: '/resets/',
                 method: 'POST',
-                data: $('#recoverForm').serialize(),
-                success: () => {
-                    $('#recoverForm')[0].reset()
-                    $('#msg').html('Request is sent, if your email exists you will receive an email to reset your password')
-                },
-                error: (err) => {
-                    console.log(err)
-                }
+                data: $('#recoverForm').serialize()
+            }).always(() => {
+                $('#recoverForm')[0].reset()
+                $('#msg').html('Request is sent, if your email exists you will receive an email to reset your password')
             })
         }
     })
