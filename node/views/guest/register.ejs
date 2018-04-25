@@ -1,0 +1,22 @@
+<div class="container">
+    <form id="registerForm" class="register form" method="POST" action="/users/">
+        <h2>Register New Account</h2>
+        <p id="msg"></p>
+        <label for="email">Email</label>
+        <div>
+            <input type="email" name="email" id="email" placeholder="Email" class="field" required>
+            <p class="hint email-msg">Enter your Email</p>
+        </div>
+        <label for="username">Username</label>
+        <div>
+            <input type="text" name="username" id="username" placeholder="Username" class="field" required>
+            <p class="hint username-msg">Enter your username</p>
+        </div>
+        <label for="password">Password</label>
+        <div>
+            <input type="password" name="password" id="password" placeholder="Password" class="field" required>
+            <p class="hint password-msg">Enter your Password</p>
+        </div>
+        <input type="submit" id="register" value="Register" class="btn">
+    </form>
+</div>

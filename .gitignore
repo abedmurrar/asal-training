@@ -1,0 +1,9 @@
+node_modules
+*.log
+.idea
+.vscode
+.eslintrc.*
+package-lock.json
+*.min.js
+!public/*/*.min.*
+.todo

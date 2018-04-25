@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+    <script src="/javascripts/main.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/css.min.css">
+</head>
+
+<body>
+    <header>
+    <% if(!logged){ %>
+        <%- include('guest/nav') %>
+    <% }else { %>
+        <% if(role ==='client'){ %>
+            <%- include('user/nav') %>
+        <% } if(role ==='admin') {%>
+            <%- include('admin/nav') %>
+    <% }} %>
+    </header>
+    <main class="content">
+    <%- include(page) %>
+    </main>
+</body>
+
+</html>

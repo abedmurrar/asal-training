@@ -1,0 +1,18 @@
+<div class="container">
+    <form id="loginForm" class="login form" method="POST" action="/login">
+        <h2>Login</h2>
+        <p class="msg"></p>
+        <label for="username">Username</label>
+        <div>
+            <input type="text" name="username" id="username" placeholder="Username" class="field" required>
+            <p class="hint username-msg">Enter your username</p>
+        </div>
+        <label for="password">Password</label>
+        <div>
+            <input type="password" name="password" id="password" placeholder="Password" class="field" required>
+            <p class="hint password-msg">Enter your Password</p>
+        </div>
+        <input type="submit" id="login" value="Login" class="btn">
+        <a href="/recover">Forgot password?</a>
+    </form>
+</div>
