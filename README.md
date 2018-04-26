@@ -34,12 +34,13 @@ This repository is for exploring __JavaScript__ without sincerely going deep in 
 - CSS
 - Plain JavaScript
 - jQuery
-- nodeJs
+- nodeJS (Express, Knex, Crypto, mongoDB, mongoose, webpack, nodemon)
 - MySQL
+- mongoDB
+- React
 ------
 ## Possible future technologies :
 - AngularJS
-- React & Redux
+- Redux
 - Nuxt & VueJs
 - Sass
-- mongoDB
